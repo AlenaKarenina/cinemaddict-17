@@ -7,7 +7,7 @@ const createProfileTemplate = () => (`
   </section>
 `);
 
-export default class NewFilterView {
+export default class ProfileView {
   getTemplate() {
     return createProfileTemplate();
   }
