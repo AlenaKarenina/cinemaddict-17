@@ -33,6 +33,5 @@ export default class FilmsPresenter {
     for (let i = 0; i < this.sectionComment.length; i++) {
       render(new CommentView(this.sectionComment[i]), this.place, RenderPosition.BEFOREEND);
     }
-
   };
 }
