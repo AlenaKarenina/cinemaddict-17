@@ -1,4 +1,4 @@
-import {render, RenderPosition} from '../render.js';
+import {render} from '../render.js';
 import {getRandomInteger} from '../utils.js';
 import SectionFilmsView from '../view/film-section.js';
 import ContainerListFilms from '../view/film-list-container-view.js';
