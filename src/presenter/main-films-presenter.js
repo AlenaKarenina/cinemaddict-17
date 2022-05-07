@@ -34,8 +34,10 @@ export default class FilmsPresenter {
     this.commentsModel = commentsModel;
     this.sectionComment = [...this.commentsModel.getComment()];
 
+    const commentsList = document.querySelector('.film-details__comments-list');
+
     for (let i = 0; i < this.sectionComment.length; i++) {
-      render(new CommentView(this.sectionComment[i]), this.place, RenderPosition.BEFOREEND);
+      render(new CommentView(this.sectionComment[i]), commentsList);
     }
   };
 }
