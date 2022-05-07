@@ -1,4 +1,5 @@
 import {render, RenderPosition} from '../render.js';
+import {getRandomInteger} from '../utils.js';
 import SectionFilmsView from '../view/film-section.js';
 import ContainerListFilms from '../view/film-list-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
@@ -23,9 +24,7 @@ export default class FilmsPresenter {
       render(new FilmCardView(this.sectionMovie[i]), this.containerFilms.getElement());
     }
 
-    for (let j = 0; j < this.sectionMovie.length; j++) {
-      render(new PopupFilmView(this.sectionMovie[j]), document.body, RenderPosition.BEFOREEND);
-    }
+    render(new PopupFilmView(this.sectionMovie[getRandomInteger(0, this.sectionMovie.length - 1)]), document.body);
 
     render(new LoadMoreButtonView(), this.sectionFilms.getElement());
   };
