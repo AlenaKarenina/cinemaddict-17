@@ -2,6 +2,7 @@ import {render, RenderPosition} from '../render.js';
 import SectionFilmsView from '../view/film-section.js';
 import ContainerListFilms from '../view/film-list-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
+import PopupFilmView from '../view/film-details-popup-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
 import CommentView from '../view/comment-popup-view.js';
 
@@ -20,6 +21,10 @@ export default class FilmsPresenter {
 
     for (let i = 0; i < this.sectionMovie.length; i++) {
       render(new FilmCardView(this.sectionMovie[i]), this.containerFilms.getElement());
+    }
+
+    for (let j = 0; j < this.sectionMovie.length; j++) {
+      render(new PopupFilmView(this.sectionMovie[j]), document.body, RenderPosition.BEFOREEND);
     }
 
     render(new LoadMoreButtonView(), this.sectionFilms.getElement());

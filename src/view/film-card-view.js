@@ -2,21 +2,34 @@ import {createElement} from '../render.js';
 import {humanizeDueDate} from '../utils.js';
 
 const createFilmCardTemplate = (movie) => {
-  const {filmInfo, id, comments} = movie;
+
+  const {
+    filmInfo: {
+      title,
+      totalRating,
+      runtime,
+      poster,
+      description,
+      genre,
+      release: {
+        date
+      },
+    },
+    comments
+  } = movie;
 
   return (`
   <article class="film-card">
     <a class="film-card__link">
-      <div class="visually-hidden">${id}</div>
-      <h3 class="film-card__title">${filmInfo.title}</h3>
-      <p class="film-card__rating">${filmInfo.totalRating}</p>
+      <h3 class="film-card__title">${title}</h3>
+      <p class="film-card__rating">${totalRating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${humanizeDueDate(filmInfo.release.date)}</span>
-        <span class="film-card__duration">${filmInfo.runtime}</span>
-        <span class="film-card__genre">${filmInfo.genre}</span>
+        <span class="film-card__year">${humanizeDueDate(date)}</span>
+        <span class="film-card__duration">${runtime}</span>
+        <span class="film-card__genre">${genre}</span>
       </p>
-      <img src="./${filmInfo.poster}" alt="${filmInfo.title}" class="film-card__poster">
-      <p class="film-card__description">${filmInfo.description}</p>
+      <img src="./${poster}" alt="${title}" class="film-card__poster">
+      <p class="film-card__description">${description}</p>
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">

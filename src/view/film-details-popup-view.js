@@ -1,7 +1,25 @@
 import {createElement} from '../render.js';
+import {humanizeDueDate} from '../utils.js';
 
-const createFilmDetailsPopupTemplate = () => (`
-  <section class="film-details visually-hidden">
+const createFilmDetailsPopupTemplate = (movie) => {
+
+  const {
+    filmInfo: {
+      title,
+      totalRating,
+      poster,
+      director,
+      writers,
+      actors,
+      release: {
+        date
+      },
+      ageRating
+    }
+  } = movie;
+
+  return (`
+  <section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="film-details__top-container">
         <div class="film-details__close">
@@ -9,35 +27,35 @@ const createFilmDetailsPopupTemplate = () => (`
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/the-great-flamarion.jpg" alt="">
-            <p class="film-details__age">18+</p>
+            <img class="film-details__poster-img" src="./${poster}" alt="${title}">
+            <p class="film-details__age">${ageRating}+</p>
           </div>
           <div class="film-details__info">
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
-                <h3 class="film-details__title">The Great Flamarion</h3>
-                <p class="film-details__title-original">Original: The Great Flamarion</p>
+                <h3 class="film-details__title">${title}</h3>
+                <p class="film-details__title-original">Original: ${title}</p>
               </div>
               <div class="film-details__rating">
-                <p class="film-details__total-rating">8.9</p>
+                <p class="film-details__total-rating">${totalRating}</p>
               </div>
             </div>
             <table class="film-details__table">
               <tr class="film-details__row">
                 <td class="film-details__term">Director</td>
-                <td class="film-details__cell">Anthony Mann</td>
+                <td class="film-details__cell">${director}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+                <td class="film-details__cell">${writers}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+                <td class="film-details__cell">${actors}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">30 March 1945</td>
+                <td class="film-details__cell">${humanizeDueDate(date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
@@ -97,12 +115,16 @@ const createFilmDetailsPopupTemplate = () => (`
         </section>
       </div>
     </form>
-  </section>
-`);
+  </section>`);
+};
 
 export default class PopupFilmView {
+  constructor(movie) {
+    this.movie = movie;
+  }
+
   getTemplate() {
-    return createFilmDetailsPopupTemplate();
+    return createFilmDetailsPopupTemplate(this.movie);
   }
 
   getElement() {
