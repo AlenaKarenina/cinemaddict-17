@@ -1,5 +1,4 @@
-import {render} from '../render.js';
-import {getRandomInteger} from '../utils.js';
+import {render, RenderPosition} from '../render.js';
 import SectionFilmsView from '../view/film-section.js';
 import ContainerListFilms from '../view/film-list-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
@@ -15,6 +14,45 @@ export default class FilmsPresenter {
   #movieModel = null;
   #filmListContainer = null;
 
+  #renderFilm = (movie) => {
+    const filmComponent = new FilmCardView(movie);
+    const popupComponent = new PopupFilmView(movie);
+
+    render(filmComponent, this.#containerFilms.element);
+
+    const openPopup = () => {
+      document.body.appendChild(popupComponent.element);
+      document.body.classList.add('hide-overflow');
+    };
+
+    const closePopup = () => {
+      document.body.removeChild(popupComponent.element);
+      document.body.classList.remove('hide-overflow');
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        closePopup();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    filmComponent.element.querySelector('.film-card__poster').addEventListener('click', () => {
+      openPopup();
+      document.addEventListener('keydown', onEscKeyDown);
+
+      const commentList = document.querySelector('.film-details__comments-list');
+      this.pasteComments(commentList, movie);
+    });
+
+    popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
+      closePopup();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+  };
+
+
   init = (filmListContainer, movieModel) => {
     this.#filmListContainer = filmListContainer;
     this.#movieModel = movieModel;
@@ -24,10 +62,8 @@ export default class FilmsPresenter {
     render(this.#containerFilms, this.#sectionFilms.element);
 
     for (let i = 0; i < this.#sectionMovie.length; i++) {
-      render(new FilmCardView(this.#sectionMovie[i]), this.#containerFilms.element);
+      this.#renderFilm(this.#sectionMovie[i]);
     }
-
-    render(new PopupFilmView(this.#sectionMovie[getRandomInteger(0, this.#sectionMovie.length - 1)]), document.body);
 
     render(new LoadMoreButtonView(), this.#sectionFilms.element);
   };
@@ -39,12 +75,10 @@ export default class FilmsPresenter {
   pasteComments = (place, commentsModel) => {
     this.#place = place;
     this.#commentsModel = commentsModel;
-    this.#sectionComment = [...this.#commentsModel.comment];
-
-    const commentsList = document.querySelector('.film-details__comments-list');
+    this.#sectionComment = [...this.#commentsModel.comments];
 
     for (let i = 0; i < this.#sectionComment.length; i++) {
-      render(new CommentView(this.#sectionComment[i]), commentsList);
+      render(new CommentView(this.#sectionComment[i]), this.#place, RenderPosition.BEFOREEND);
     }
   };
 }

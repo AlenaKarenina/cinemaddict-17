@@ -20,7 +20,4 @@ render(new NavigationView, pageMain, RenderPosition.BEFOREEND);
 render(new FilterView, pageMain, RenderPosition.BEFOREEND);
 render(new FooterStatisticsView, pageFooter, RenderPosition.BEFOREEND);
 
-const commentsList = document.querySelector('.film-details__comments-list');
-
 containerFilmsPresenter.init(pageMain, movieModel);
-containerFilmsPresenter.pasteComments(commentsList, movieModel);

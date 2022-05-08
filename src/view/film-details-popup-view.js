@@ -122,24 +122,6 @@ const createFilmDetailsPopupTemplate = (movie) => {
 };
 
 export default class PopupFilmView {
-  /*constructor(movie) {
-    this.movie = movie;
-  }
-
-  getTemplate() {
-    return createFilmDetailsPopupTemplate(this.movie);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }*/
 
   #comment = null;
   #element = null;
