@@ -11,8 +11,11 @@ const createFilmDetailsPopupTemplate = (movie) => {
       director,
       writers,
       actors,
+      runtime,
+      description,
       release: {
-        date
+        date,
+        releaseCountry
       },
       ageRating
     }
@@ -59,11 +62,11 @@ const createFilmDetailsPopupTemplate = (movie) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">1h 18m</td>
+                <td class="film-details__cell">${runtime}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">USA</td>
+                <td class="film-details__cell">${releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
@@ -74,7 +77,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
               </tr>
             </table>
             <p class="film-details__film-description">
-              The film opens following a murder at a cabaret in Mexico City in 1936, and then presents the events leading up to it in flashback. The Great Flamarion (Erich von Stroheim) is an arrogant, friendless, and misogynous marksman who displays his trick gunshot act in the vaudeville circuit. His show features a beautiful assistant, Connie (Mary Beth Hughes) and her drunken husband Al (Dan Duryea), Flamarion's other assistant. Flamarion falls in love with Connie, the movie's femme fatale, and is soon manipulated by her into killing her no good husband during one of their acts.
+              ${description}
             </p>
           </div>
         </div>

@@ -104,10 +104,10 @@ export const genetateMovieCard = () => {
     ],
     'filmInfo': {
       'title': titles[getRandomInteger(0, 5)],
-      'alternative_title': 'Laziness Who Sold Themselves',
+      'alternativeTitle': 'Laziness Who Sold Themselves',
       'totalRating': getRandomInteger(0, 10),
       'poster': `${postersSrc[getRandomInteger(0, 5)]}`,
-      'age_rating': getRandomInteger(0, 10),
+      'ageRating': getRandomInteger(0, 10),
       'director': directors[getRandomInteger(0, 5)],
       'writers': writers.slice(0,[getRandomInteger(1, actors.length)]),
       'actors': actors.slice(0,[getRandomInteger(0, actors.length - 1)]),
@@ -119,10 +119,10 @@ export const genetateMovieCard = () => {
       'genre': genreFilm.slice().splice(getRandomInteger(0, genreFilm.length - 1),[getRandomInteger(1, 2)]),
       'description': description[getRandomInteger(0, 5)],
     },
-    'user_details': {
+    'userDetails': {
       'watchlist': false,
-      'already_watched': true,
-      'watching_date': '2019-04-12T16:12:32.554Z',
+      'alreadyWatched': true,
+      'watchingDate': '2019-04-12T16:12:32.554Z',
       'favorite': false
     }
   };
