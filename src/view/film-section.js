@@ -6,7 +6,7 @@ const createSectionFilms = () => (`
   </section>
 `);
 
-export default class NewSectionFilmsView {
+export default class SectionFilmsView {
   getTemplate() {
     return createSectionFilms();
   }
