@@ -122,7 +122,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
 };
 
 export default class PopupFilmView {
-  constructor(movie) {
+  /*constructor(movie) {
     this.movie = movie;
   }
 
@@ -139,5 +139,27 @@ export default class PopupFilmView {
 
   removeElement() {
     this.element = null;
+  }*/
+
+  #comment = null;
+  #element = null;
+
+  constructor(comment) {
+    this.#comment = comment;
+  }
+
+  get template() {
+    return createFilmDetailsPopupTemplate(this.#comment);
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+    return this.#element;
+  }
+
+  removeElement() {
+    this.#element = null;
   }
 }

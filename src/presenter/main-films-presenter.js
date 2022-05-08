@@ -9,35 +9,42 @@ import CommentView from '../view/comment-popup-view.js';
 
 export default class FilmsPresenter {
 
-  sectionFilms = new SectionFilmsView;
-  containerFilms = new ContainerListFilms;
+  #sectionFilms = new SectionFilmsView;
+  #containerFilms = new ContainerListFilms;
+  #sectionMovie = [];
+  #movieModel = null;
+  #filmListContainer = null;
 
   init = (filmListContainer, movieModel) => {
-    this.filmListContainer = filmListContainer;
-    this.movieModel = movieModel;
-    this.sectionMovie = [...this.movieModel.getMovie()];
+    this.#filmListContainer = filmListContainer;
+    this.#movieModel = movieModel;
+    this.#sectionMovie = [...this.#movieModel.movie];
 
-    render(this.sectionFilms, this.filmListContainer);
-    render(this.containerFilms, this.sectionFilms.getElement());
+    render(this.#sectionFilms, this.#filmListContainer);
+    render(this.#containerFilms, this.#sectionFilms.element);
 
-    for (let i = 0; i < this.sectionMovie.length; i++) {
-      render(new FilmCardView(this.sectionMovie[i]), this.containerFilms.getElement());
+    for (let i = 0; i < this.#sectionMovie.length; i++) {
+      render(new FilmCardView(this.#sectionMovie[i]), this.#containerFilms.element);
     }
 
-    render(new PopupFilmView(this.sectionMovie[getRandomInteger(0, this.sectionMovie.length - 1)]), document.body);
+    render(new PopupFilmView(this.#sectionMovie[getRandomInteger(0, this.#sectionMovie.length - 1)]), document.body);
 
-    render(new LoadMoreButtonView(), this.sectionFilms.getElement());
+    render(new LoadMoreButtonView(), this.#sectionFilms.element);
   };
 
+  #place = null;
+  #commentsModel = null;
+  #sectionComment = [];
+
   pasteComments = (place, commentsModel) => {
-    this.place = place;
-    this.commentsModel = commentsModel;
-    this.sectionComment = [...this.commentsModel.getComment()];
+    this.#place = place;
+    this.#commentsModel = commentsModel;
+    this.#sectionComment = [...this.#commentsModel.comment];
 
     const commentsList = document.querySelector('.film-details__comments-list');
 
-    for (let i = 0; i < this.sectionComment.length; i++) {
-      render(new CommentView(this.sectionComment[i]), commentsList);
+    for (let i = 0; i < this.#sectionComment.length; i++) {
+      render(new CommentView(this.#sectionComment[i]), commentsList);
     }
   };
 }
