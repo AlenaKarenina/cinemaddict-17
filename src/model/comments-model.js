@@ -1,8 +1,13 @@
 import {generateComment} from '../mock/comments-template.js';
 
-export default class CommentsModel {
-  #comments = Array.from({length: 50}, generateComment);
+const COMMENT_COUNT = 50;
 
-  getComment = () => this.#comments;
-  getCommentsById = (id) => this.#comments.filter((comment)=>comment.id === id);
+export default class CommentsModel {
+  #comments = Array.from({length: COMMENT_COUNT}, generateComment);
+
+  get comments() {
+    return this.#comments;
+  }
+
+  getCommentsById = (id) => this.#comments.filter((comment) => comment.id === id);
 }
