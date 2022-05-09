@@ -70,12 +70,11 @@ export default class FilmsPresenter {
   };
 
   #renderMovie = () => {
-    render(this.#sectionMovie, this.#filmListContainer);
 
-    if (this.#sectionMovie.every((element) => element.isArchive)) {
+    if (this.#sectionMovie.length === 0) {
       render(new NoMovieView(), this.#filmListContainer);
     } else {
-      render(new FilterView(), this.#sectionFilms.element);
+      render(new FilterView(), this.#filmListContainer);
       render(this.#sectionFilms, this.#filmListContainer);
       render(this.#containerFilms, this.#sectionFilms.element);
     }
