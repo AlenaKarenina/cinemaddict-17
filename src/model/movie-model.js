@@ -6,8 +6,8 @@ const COMMENT_COUNT = 20;
 
 export default class MovieModel {
   #movie = Array.from({length: CARD_COUNT}, genetateMovieCard);
-  get movie () { return this.#movie; }
+  get movie() { return this.#movie; }
 
   #comments = Array.from({length: COMMENT_COUNT}, generateComment);
-  get comment () { return this.#comments; }
+  get comments() { return this.#comments; }
 }
