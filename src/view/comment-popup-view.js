@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeDueDate} from '../utils.js';
 
 const createComment = (comments) => {
@@ -20,27 +20,15 @@ const createComment = (comments) => {
   </li>`);
 };
 
-export default class CommentView {
+export default class CommentView extends AbstractView {
+  #comment = null;
 
-  #movie = null;
-  #element = null;
-
-  constructor(movie) {
-    this.#movie = movie;
+  constructor(comment) {
+    super();
+    this.#comment = comment;
   }
 
   get template() {
-    return createComment(this.#movie);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
+    return createComment(this.#comment);
   }
 }

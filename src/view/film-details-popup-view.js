@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeDueDate} from '../utils.js';
 
 const createFilmDetailsPopupTemplate = (movie) => {
@@ -121,27 +121,15 @@ const createFilmDetailsPopupTemplate = (movie) => {
   </section>`);
 };
 
-export default class PopupFilmView {
+export default class PopupFilmView extends AbstractView {
+  #movie = null;
 
-  #comment = null;
-  #element = null;
-
-  constructor(comment) {
-    this.#comment = comment;
+  constructor(movie) {
+    super();
+    this.#movie = movie;
   }
 
   get template() {
-    return createFilmDetailsPopupTemplate(this.#comment);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
+    return createFilmDetailsPopupTemplate(this.#movie);
   }
 }

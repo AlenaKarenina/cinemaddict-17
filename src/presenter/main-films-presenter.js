@@ -1,4 +1,4 @@
-import {render, RenderPosition} from '../render.js';
+import {render} from '../framework/render.js';
 import SectionFilmsView from '../view/film-section.js';
 import ContainerListFilms from '../view/film-list-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
@@ -115,7 +115,7 @@ export default class FilmsPresenter {
     this.#sectionComment = [...this.#commentsModel.comments];
 
     for (let i = 0; i < this.#sectionComment.length; i++) {
-      render(new CommentView(this.#sectionComment[i]), this.#place, RenderPosition.BEFOREEND);
+      render(new CommentView(this.#sectionComment[i]), this.#place);
     }
   };
 }
