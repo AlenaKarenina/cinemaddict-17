@@ -1,5 +1,5 @@
 import {render, remove} from '../framework/render.js';
-import FilmsSectionView from '../view/film-section-view.js';
+import FilmSectionView from '../view/film-section-view.js';
 import FilmContainerView from '../view/film-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupFilmView from '../view/popup-film-view.js';
@@ -12,8 +12,8 @@ const SHOW_FILM_COUNT_STEP = 5;
 
 export default class FilmsPresenter {
 
-  #sectionFilms = new FilmsSectionView;
-  #containerFilms = new FilmContainerView;
+  #filmSection = new FilmSectionView;
+  #filmContainer = new FilmContainerView;
   #loadMoreButtonComponent = new LoadMoreButtonView();
   #sectionMovie = [];
   #movieModel = null;
@@ -24,7 +24,7 @@ export default class FilmsPresenter {
     const filmComponent = new FilmCardView(movie);
     const popupComponent = new PopupFilmView(movie);
 
-    render(filmComponent, this.#containerFilms.element);
+    render(filmComponent, this.#filmContainer.element);
 
     const openPopup = () => {
       document.body.appendChild(popupComponent.element);
@@ -65,7 +65,6 @@ export default class FilmsPresenter {
 
   init = () => {
     this.#sectionMovie = [...this.#movieModel.movie];
-
     this.#renderMovie();
   };
 
@@ -75,8 +74,8 @@ export default class FilmsPresenter {
       render(new NoFilmCardView(), this.#filmListContainer);
     } else {
       render(new FilterView(), this.#filmListContainer);
-      render(this.#sectionFilms, this.#filmListContainer);
-      render(this.#containerFilms, this.#sectionFilms.element);
+      render(this.#filmSection, this.#filmListContainer);
+      render(this.#filmContainer, this.#filmSection.element);
     }
 
     for (let i = 0; i < Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP); i++) {
@@ -84,7 +83,7 @@ export default class FilmsPresenter {
     }
 
     if (this.#sectionMovie.length > SHOW_FILM_COUNT_STEP) {
-      render(this.#loadMoreButtonComponent, this.#sectionFilms.element);
+      render(this.#loadMoreButtonComponent, this.#filmSection.element);
 
       this.#loadMoreButtonComponent.setClickLoadHandler(this.#handleLoadMoreButtonClick);
     }
