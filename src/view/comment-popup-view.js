@@ -20,7 +20,7 @@ const createComment = (comments) => {
   </li>`);
 };
 
-export default class CommentView extends AbstractView {
+export default class CommentPopupView extends AbstractView {
   #comment = null;
 
   constructor(comment) {

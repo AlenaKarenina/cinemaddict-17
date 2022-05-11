@@ -6,7 +6,7 @@ const createSectionFilms = () => (`
   </section>
 `);
 
-export default class SectionFilmsView extends AbstractView {
+export default class FilmsSectionView extends AbstractView {
   get template() {
     return createSectionFilms();
   }

@@ -1,19 +1,19 @@
 import {render, remove} from '../framework/render.js';
-import SectionFilmsView from '../view/film-section.js';
-import ContainerListFilms from '../view/film-list-container-view.js';
+import FilmsSectionView from '../view/film-section-view.js';
+import FilmContainerView from '../view/film-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
-import PopupFilmView from '../view/film-details-popup-view.js';
+import PopupFilmView from '../view/popup-film-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
-import CommentView from '../view/comment-popup-view.js';
-import NoMovieView from '../view/no-film-card-view.js';
+import CommentPopupView from '../view/comment-popup-view.js';
+import NoFilmCardView from '../view/no-film-card-view.js';
 import FilterView from '../view/filter-view.js';
 
 const SHOW_FILM_COUNT_STEP = 5;
 
 export default class FilmsPresenter {
 
-  #sectionFilms = new SectionFilmsView;
-  #containerFilms = new ContainerListFilms;
+  #sectionFilms = new FilmsSectionView;
+  #containerFilms = new FilmContainerView;
   #loadMoreButtonComponent = new LoadMoreButtonView();
   #sectionMovie = [];
   #movieModel = null;
@@ -72,7 +72,7 @@ export default class FilmsPresenter {
   #renderMovie = () => {
 
     if (this.#sectionMovie.length === 0) {
-      render(new NoMovieView(), this.#filmListContainer);
+      render(new NoFilmCardView(), this.#filmListContainer);
     } else {
       render(new FilterView(), this.#filmListContainer);
       render(this.#sectionFilms, this.#filmListContainer);
@@ -113,7 +113,7 @@ export default class FilmsPresenter {
     this.#sectionComment = [...this.#commentsModel.comments];
 
     for (let i = 0; i < this.#sectionComment.length; i++) {
-      render(new CommentView(this.#sectionComment[i]), this.#place);
+      render(new CommentPopupView(this.#sectionComment[i]), this.#place);
     }
   };
 }

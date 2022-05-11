@@ -9,7 +9,7 @@ const createMainNavigationTemplate = () => (
   </nav>`
 );
 
-export default class NavigationView extends AbstractView {
+export default class MainNavigationView extends AbstractView {
   get template() {
     return createMainNavigationTemplate();
   }
