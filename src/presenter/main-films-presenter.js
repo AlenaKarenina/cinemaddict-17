@@ -1,4 +1,4 @@
-import {render} from '../framework/render.js';
+import {render, remove} from '../framework/render.js';
 import SectionFilmsView from '../view/film-section.js';
 import ContainerListFilms from '../view/film-list-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
@@ -99,8 +99,7 @@ export default class FilmsPresenter {
     this.#renderedMovieCount += SHOW_FILM_COUNT_STEP;
 
     if (this.#renderedMovieCount >= this.#sectionMovie.length) {
-      this.#loadMoreButtonComponent.element.remove();
-      this.#loadMoreButtonComponent.removeElement();
+      remove(this.#loadMoreButtonComponent);
     }
   };
 

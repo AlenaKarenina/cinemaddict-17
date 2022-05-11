@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizeDueDate} from '../utils.js';
+import {humanizeDueDate} from '../utils/task.js';
 
 const createComment = (comments) => {
   const {comment, date, emotion, author} = comments;

@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils.js';
+import {getRandomInteger} from '../utils/common.js';
 import CommentsModel from '../model/comments-model.js';
 
 const titles = [
