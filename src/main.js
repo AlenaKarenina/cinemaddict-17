@@ -1,4 +1,5 @@
 import {render} from './framework/render.js';
+import {FilterType} from './const.js';
 import ProfileView from './view/profile-view.js';
 import MainNavigationView from './view/main-navigation-view.js';
 import FooterStatisticsView from './view/footer-statistics-view.js';
@@ -13,7 +14,7 @@ const movieModel = new MovieModel();
 const containerFilmsPresenter = new FilmsPresenter(pageMain, movieModel);
 
 render(new ProfileView, pageHeader);
-render(new MainNavigationView, pageMain);
-render(new FooterStatisticsView, pageFooter);
+render(new MainNavigationView(movieModel.filtered, FilterType.ALL), pageMain);
+render(new FooterStatisticsView(movieModel.count), pageFooter);
 
 containerFilmsPresenter.init();
