@@ -16,7 +16,7 @@ const emptyMovieSection = () => (`
   </section>
 `);
 
-export default class NoMovieView extends AbstractView {
+export default class NoFilmCardView extends AbstractView {
   get template() {
     return emptyMovieSection();
   }

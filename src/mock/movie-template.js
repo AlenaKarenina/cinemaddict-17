@@ -1,3 +1,4 @@
+import {CARD_COUNT} from '../const.js';
 import {getRandomInteger} from '../utils/common.js';
 import CommentsModel from '../model/comments-model.js';
 
@@ -120,10 +121,10 @@ export const genetateMovieCard = () => {
       'description': description[getRandomInteger(0, 5)],
     },
     'userDetails': {
-      'watchlist': false,
-      'alreadyWatched': true,
+      'watchlist': getRandomInteger(0, CARD_COUNT),
+      'alreadyWatched': getRandomInteger(0, CARD_COUNT),
       'watchingDate': '2019-04-12T16:12:32.554Z',
-      'favorite': false
+      'favorite': getRandomInteger(0, CARD_COUNT)
     }
   };
 };

@@ -1,19 +1,19 @@
 import {render, remove} from '../framework/render.js';
-import SectionFilmsView from '../view/film-section.js';
-import ContainerListFilms from '../view/film-list-container-view.js';
+import FilmSectionView from '../view/film-section-view.js';
+import FilmContainerView from '../view/film-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
-import PopupFilmView from '../view/film-details-popup-view.js';
+import PopupFilmView from '../view/popup-film-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
-import CommentView from '../view/comment-popup-view.js';
-import NoMovieView from '../view/no-film-card-view.js';
+import CommentPopupView from '../view/comment-popup-view.js';
+import NoFilmCardView from '../view/no-film-card-view.js';
 import FilterView from '../view/filter-view.js';
 
 const SHOW_FILM_COUNT_STEP = 5;
 
 export default class FilmsPresenter {
 
-  #sectionFilms = new SectionFilmsView;
-  #containerFilms = new ContainerListFilms;
+  #filmSection = new FilmSectionView;
+  #filmContainer = new FilmContainerView;
   #loadMoreButtonComponent = new LoadMoreButtonView();
   #sectionMovie = [];
   #movieModel = null;
@@ -24,7 +24,7 @@ export default class FilmsPresenter {
     const filmComponent = new FilmCardView(movie);
     const popupComponent = new PopupFilmView(movie);
 
-    render(filmComponent, this.#containerFilms.element);
+    render(filmComponent, this.#filmContainer.element);
 
     const openPopup = () => {
       document.body.appendChild(popupComponent.element);
@@ -65,18 +65,17 @@ export default class FilmsPresenter {
 
   init = () => {
     this.#sectionMovie = [...this.#movieModel.movie];
-
     this.#renderMovie();
   };
 
   #renderMovie = () => {
 
     if (this.#sectionMovie.length === 0) {
-      render(new NoMovieView(), this.#filmListContainer);
+      render(new NoFilmCardView(), this.#filmListContainer);
     } else {
       render(new FilterView(), this.#filmListContainer);
-      render(this.#sectionFilms, this.#filmListContainer);
-      render(this.#containerFilms, this.#sectionFilms.element);
+      render(this.#filmSection, this.#filmListContainer);
+      render(this.#filmContainer, this.#filmSection.element);
     }
 
     for (let i = 0; i < Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP); i++) {
@@ -84,7 +83,7 @@ export default class FilmsPresenter {
     }
 
     if (this.#sectionMovie.length > SHOW_FILM_COUNT_STEP) {
-      render(this.#loadMoreButtonComponent, this.#sectionFilms.element);
+      render(this.#loadMoreButtonComponent, this.#filmSection.element);
 
       this.#loadMoreButtonComponent.setClickLoadHandler(this.#handleLoadMoreButtonClick);
     }
@@ -113,7 +112,7 @@ export default class FilmsPresenter {
     this.#sectionComment = [...this.#commentsModel.comments];
 
     for (let i = 0; i < this.#sectionComment.length; i++) {
-      render(new CommentView(this.#sectionComment[i]), this.#place);
+      render(new CommentPopupView(this.#sectionComment[i]), this.#place);
     }
   };
 }
