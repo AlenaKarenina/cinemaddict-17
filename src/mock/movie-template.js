@@ -1,6 +1,7 @@
 import {CARD_COUNT} from '../const.js';
 import {getRandomInteger} from '../utils/common.js';
 import CommentsModel from '../model/comments-model.js';
+import {nanoid} from 'nanoid';
 
 const titles = [
   'Made for Each other',
@@ -99,7 +100,7 @@ export const genetateMovieCard = () => {
   const id = getRandomInteger(1, 5);
   return {
 
-    'id': id,
+    'id': nanoid(),
     'comments': [
       ...commentsList.getCommentsById(id)
     ],

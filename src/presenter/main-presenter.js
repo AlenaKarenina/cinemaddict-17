@@ -23,9 +23,12 @@ export default class FilmsPresenter {
   #filmListContainer = null;
   #renderedMovieCount = SHOW_FILM_COUNT_STEP;
 
+  #filmPresenter = new Map();
+
   #createFilm = (movie) => {
     const filmPresenter = new FilmPresenter(this.#filmContainer.element);
     filmPresenter.init(movie);
+    this.#filmPresenter.set(movie.id, filmPresenter);
   };
 
   constructor(filmListContainer, movieModel) {
@@ -61,6 +64,13 @@ export default class FilmsPresenter {
   #renderLoadMoreButton = () => {
     render(this.#loadMoreButtonComponent, this.#filmSection.element);
     this.#loadMoreButtonComponent.setClickLoadHandler(this.#handleLoadMoreButtonClick);
+  };
+
+  #clearFilmList = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.destroy());
+    this.#filmPresenter.clear();
+    this.#renderedMovieCount = SHOW_FILM_COUNT_STEP;
+    remove(this.#loadMoreButtonComponent);
   };
 
   #renderSort = () => {
