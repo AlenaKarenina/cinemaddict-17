@@ -6,11 +6,13 @@ export default class FilmPresenter {
   #filmListContainer = null;
   #filmComponent = null;
   #popupComponent = null;
+  #changeData = null;
 
   #movie = null;
 
-  constructor(filmListContainer) {
+  constructor(filmListContainer, changeData) {
     this.#filmListContainer = filmListContainer;
+    this.#changeData = changeData;
   }
 
   init = (movie) => {
@@ -21,6 +23,10 @@ export default class FilmPresenter {
 
     this.#filmComponent = new FilmCardView(movie);
     this.#popupComponent = new PopupFilmView(movie);
+
+    this.#filmComponent.setWatchlistClickHandler(this.#onWatchListClick);
+    this.#filmComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
+    this.#filmComponent.setFavoriteClickHandler(this.#onFavoriteClick);
 
     this.#filmComponent.setClickHandler(() => {
       this.#openPopup(movie);
@@ -61,4 +67,17 @@ export default class FilmPresenter {
     remove(this.#popupComponent);
     document.body.classList.remove('hide-overflow');
   };
+
+  #onWatchListClick = () => {
+    this.#changeData({...this.#movie, watchlist: !this.#movie.userDetails.watchlist});
+  };
+
+  #onAlreadyWatchedClick = () => {
+    this.#changeData({...this.#movie, alreadyWatched: !this.#movie.userDetails.alreadyWatched});
+  };
+
+  #onFavoriteClick = () => {
+    this.#changeData({...this.#movie, favorite: !this.#movie.userDetails.favorite});
+  };
+
 }

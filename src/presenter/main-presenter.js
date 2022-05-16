@@ -27,7 +27,7 @@ export default class FilmsPresenter {
   #filmPresenter = new Map();
 
   #createFilm = (movie) => {
-    const filmPresenter = new FilmPresenter(this.#filmContainer.element);
+    const filmPresenter = new FilmPresenter(this.#filmContainer.element, this.#handleFilmChange);
     filmPresenter.init(movie);
     this.#filmPresenter.set(movie.id, filmPresenter);
   };
