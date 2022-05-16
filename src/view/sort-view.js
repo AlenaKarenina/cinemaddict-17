@@ -8,7 +8,7 @@ const createFilterTemplate = () => (`
   </ul>
 `);
 
-export default class FilterView extends AbstractView {
+export default class SortView extends AbstractView {
   get template() {
     return createFilterTemplate();
   }

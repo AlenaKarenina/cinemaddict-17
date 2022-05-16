@@ -16,4 +16,6 @@ const FilterName = {
   [FilterType.FAVORITES]: 'Favorites'
 };
 
-export {CARD_COUNT, COMMENT_COUNT, FilterType, FilterName};
+const SHOW_FILM_COUNT_STEP = 5;
+
+export {CARD_COUNT, COMMENT_COUNT, FilterType, FilterName, SHOW_FILM_COUNT_STEP};
