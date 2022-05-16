@@ -2,10 +2,7 @@ import {render, remove} from '../framework/render.js';
 import {SHOW_FILM_COUNT_STEP} from '../const.js';
 import FilmSectionView from '../view/film-section-view.js';
 import FilmContainerView from '../view/film-container-view.js';
-//import FilmCardView from '../view/film-card-view.js';
-//import PopupFilmView from '../view/popup-film-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
-import CommentPopupView from '../view/comment-popup-view.js';
 import NoFilmCardView from '../view/no-film-card-view.js';
 import SortView from '../view/sort-view.js';
 import FilmPresenter from './film-presenter.js';
@@ -106,19 +103,5 @@ export default class FilmsPresenter {
 
     this.#renderSort();
     this.#renderFilmsList();
-  };
-
-  #place = null;
-  #commentsModel = null;
-  #sectionComment = [];
-
-  pasteComments = (place, commentsModel) => {
-    this.#place = place;
-    this.#commentsModel = commentsModel;
-    this.#sectionComment = [...this.#commentsModel.comments];
-
-    for (let i = 0; i < this.#sectionComment.length; i++) {
-      render(new CommentPopupView(this.#sectionComment[i]), this.#place);
-    }
   };
 }

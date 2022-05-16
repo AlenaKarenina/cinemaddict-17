@@ -1,6 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupFilmView from '../view/popup-film-view.js';
+import CommentPopupView from '../view/comment-popup-view.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -73,9 +74,9 @@ export default class FilmPresenter {
   };
 
   #openPopup = () => {
-    render(this.#popupComponent, document.body);
+    this.#renderPopup();
     document.body.classList.add('hide-overflow');
-
+    document.addEventListener('keydown', this.#onEscKeyDown);
     this.#changeMode();
     this.#mode = Mode.OPENED;
   };
@@ -83,8 +84,26 @@ export default class FilmPresenter {
   #closePopup = () => {
     remove(this.#popupComponent);
     document.body.classList.remove('hide-overflow');
-
+    document.removeEventListener('keydown', this.#onEscKeyDown);
     this.#mode = Mode.DEFAULT;
+  };
+
+  #renderPopup = () => {
+    render(this.#popupComponent, document.body);
+
+    this.#popupComponent.setCloseClickHandler(this.#closePopup);
+    this.#popupComponent.setFavoriteClickHandler(this.#onFavoriteClick);
+    this.#popupComponent.setWatchlistClickHandler(this.#onWatchListClick);
+    this.#popupComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
+
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+  };
+
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.#closePopup();
+    }
   };
 
   #onWatchListClick = () => {
@@ -98,5 +117,4 @@ export default class FilmPresenter {
   #onFavoriteClick = () => {
     this.#changeData({...this.#movie, favorite: !this.#movie.userDetails.favorite});
   };
-
 }
