@@ -2,17 +2,25 @@ import {render, replace, remove} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupFilmView from '../view/popup-film-view.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  OPENED: 'OPENED',
+};
+
 export default class FilmPresenter {
   #filmListContainer = null;
   #filmComponent = null;
   #popupComponent = null;
   #changeData = null;
+  #changeMode = null;
 
   #movie = null;
+  #mode = Mode.DEFAULT;
 
-  constructor(filmListContainer, changeData) {
+  constructor(filmListContainer, changeData, changeMode) {
     this.#filmListContainer = filmListContainer;
     this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
   init = (movie) => {
@@ -45,7 +53,7 @@ export default class FilmPresenter {
       replace(this.#filmComponent, prevFilmComponent);
     }
 
-    if (this.#filmListContainer.contains(prevPopupComponent.element)) {
+    if (this.#mode === Mode.OPENED) {
       replace(this.#popupComponent, prevPopupComponent);
     }
 
@@ -58,14 +66,25 @@ export default class FilmPresenter {
     remove(this.#popupComponent);
   };
 
+  resetView = () => {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#openPopup();
+    }
+  };
+
   #openPopup = () => {
     render(this.#popupComponent, document.body);
     document.body.classList.add('hide-overflow');
+
+    this.#changeMode();
+    this.#mode = Mode.OPENED;
   };
 
   #closePopup = () => {
     remove(this.#popupComponent);
     document.body.classList.remove('hide-overflow');
+
+    this.#mode = Mode.DEFAULT;
   };
 
   #onWatchListClick = () => {

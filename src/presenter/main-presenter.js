@@ -26,12 +26,6 @@ export default class FilmsPresenter {
 
   #filmPresenter = new Map();
 
-  #createFilm = (movie) => {
-    const filmPresenter = new FilmPresenter(this.#filmContainer.element, this.#handleFilmChange);
-    filmPresenter.init(movie);
-    this.#filmPresenter.set(movie.id, filmPresenter);
-  };
-
   constructor(filmListContainer, movieModel) {
     this.#filmListContainer = filmListContainer;
     this.#movieModel = movieModel;
@@ -74,9 +68,19 @@ export default class FilmsPresenter {
     remove(this.#loadMoreButtonComponent);
   };
 
+  #handleModeChange = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.resetView());
+  };
+
   #handleFilmChange = (updatedTask) => {
     this.#sectionMovie = updateItem(this.#sectionMovie, updatedTask);
     this.#filmPresenter.get(updatedTask.id).init(updatedTask);
+  };
+
+  #createFilm = (movie) => {
+    const filmPresenter = new FilmPresenter(this.#filmContainer.element, this.#handleFilmChange, this.#handleModeChange);
+    filmPresenter.init(movie);
+    this.#filmPresenter.set(movie.id, filmPresenter);
   };
 
   #renderSort = () => {
