@@ -9,6 +9,7 @@ import CommentPopupView from '../view/comment-popup-view.js';
 import NoFilmCardView from '../view/no-film-card-view.js';
 import SortView from '../view/sort-view.js';
 import FilmPresenter from './film-presenter.js';
+import {updateItem} from '../utils/common.js';
 
 export default class FilmsPresenter {
 
@@ -71,6 +72,11 @@ export default class FilmsPresenter {
     this.#filmPresenter.clear();
     this.#renderedMovieCount = SHOW_FILM_COUNT_STEP;
     remove(this.#loadMoreButtonComponent);
+  };
+
+  #handleFilmChange = (updatedTask) => {
+    this.#sectionMovie = updateItem(this.#sectionMovie, updatedTask);
+    this.#filmPresenter.get(updatedTask.id).init(updatedTask);
   };
 
   #renderSort = () => {
