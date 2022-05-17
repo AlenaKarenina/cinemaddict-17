@@ -73,12 +73,15 @@ export default class FilmPresenter {
     }
   };
 
-  #openPopup = () => {
+  #openPopup = (movie) => {
     this.#renderPopup();
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#onEscKeyDown);
     this.#changeMode();
     this.#mode = Mode.OPENED;
+
+    const commentList = document.querySelector('.film-details__comments-list');
+    this.#pasteComments(commentList, movie);
   };
 
   #closePopup = () => {
@@ -117,4 +120,19 @@ export default class FilmPresenter {
   #onFavoriteClick = () => {
     this.#changeData({...this.#movie, favorite: !this.#movie.userDetails.favorite});
   };
+
+  #place = null;
+  #commentsModel = null;
+  #sectionComment = [];
+
+  #pasteComments = (place, commentsModel) => {
+    this.#place = place;
+    this.#commentsModel = commentsModel;
+    this.#sectionComment = [...this.#commentsModel.comments];
+
+    for (let i = 0; i < this.#sectionComment.length; i++) {
+      render(new CommentPopupView(this.#sectionComment[i]), this.#place);
+    }
+  };
+
 }
