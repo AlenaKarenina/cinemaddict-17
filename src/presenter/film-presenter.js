@@ -18,10 +18,15 @@ export default class FilmPresenter {
   #movie = null;
   #mode = Mode.DEFAULT;
 
-  constructor(filmListContainer, changeData, changeMode) {
+  #place = null;
+  #commentsModel = null;
+  #sectionComment = [];
+
+  constructor(filmListContainer, changeData, changeMode, sectionComment) {
     this.#filmListContainer = filmListContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
+    this.#sectionComment = sectionComment;
   }
 
   init = (movie) => {
@@ -75,6 +80,7 @@ export default class FilmPresenter {
 
   #openPopup = (movie) => {
     this.#renderPopup();
+
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#onEscKeyDown);
     this.#changeMode();
@@ -120,10 +126,6 @@ export default class FilmPresenter {
   #onFavoriteClick = () => {
     this.#changeData({...this.#movie, favorite: !this.#movie.userDetails.favorite});
   };
-
-  #place = null;
-  #commentsModel = null;
-  #sectionComment = [];
 
   #pasteComments = (place, commentsModel) => {
     this.#place = place;
