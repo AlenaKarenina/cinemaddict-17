@@ -41,22 +41,11 @@ export default class FilmPresenter {
     this.#popupComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
 
     this.#filmComponent.setClickHandler(() => {
-
-      if (this.#mode === Mode.DEFAULT) {
-        this.#openPopup(movie);
-
-        this.#changeMode();
-        this.#mode = Mode.OPENED;
-      }
+      this.#openPopup(movie);
     });
 
     this.#popupComponent.setCloseClickHandler(() => {
-
-      if (this.#mode === Mode.OPENED) {
-        this.#closePopup(movie);
-
-        this.#mode = Mode.DEFAULT;
-      }
+      this.#closePopup(movie);
     });
 
     if (prevFilmComponent === null) {
@@ -83,20 +72,29 @@ export default class FilmPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#openPopup();
+      this.#closePopup();
     }
   };
 
   #openPopup = () => {
-    render(this.#popupComponent, document.body);
-    document.body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this.#onEscKeyDown);
+    if (this.#mode === Mode.DEFAULT) {
+      render(this.#popupComponent, document.body);
+      document.body.classList.add('hide-overflow');
+      document.addEventListener('keydown', this.#onEscKeyDown);
+
+      this.#changeMode();
+      this.#mode = Mode.OPENED;
+    }
   };
 
   #closePopup = () => {
-    remove(this.#popupComponent);
-    document.body.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this.#onEscKeyDown);
+    if (this.#mode === Mode.OPENED) {
+      remove(this.#popupComponent);
+      document.body.classList.remove('hide-overflow');
+      document.removeEventListener('keydown', this.#onEscKeyDown);
+
+      this.#mode = Mode.DEFAULT;
+    }
   };
 
   #onEscKeyDown = (evt) => {
