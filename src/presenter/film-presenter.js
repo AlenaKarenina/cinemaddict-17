@@ -1,7 +1,6 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupFilmView from '../view/popup-film-view.js';
-import CommentPopupView from '../view/comment-popup-view.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
