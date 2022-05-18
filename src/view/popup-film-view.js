@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeDueDate} from '../utils/task.js';
+import CommentPopupView from './comment-popup-view.js';
 
 const createFilmDetailsPopupTemplate = (movie) => {
 
@@ -18,7 +19,8 @@ const createFilmDetailsPopupTemplate = (movie) => {
         releaseCountry
       },
       ageRating
-    }
+    },
+    comments
   } = movie;
 
   return (`
@@ -89,8 +91,13 @@ const createFilmDetailsPopupTemplate = (movie) => {
       </div>
       <div class="film-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">0</span></h3>
-          <ul class="film-details__comments-list"></ul>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+          <ul class="film-details__comments-list">
+            ${comments.reduce((template, comment) => {
+              template += new CommentPopupView(comment).template;
+              return template;
+            }, '')}
+          </ul>
           <div class="film-details__new-comment">
             <div class="film-details__add-emoji-label"></div>
             <label class="film-details__comment-label">
