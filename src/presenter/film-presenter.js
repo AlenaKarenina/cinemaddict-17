@@ -42,8 +42,6 @@ export default class FilmPresenter {
 
     this.#filmComponent.setClickHandler(() => {
       this.#openPopup(movie);
-
-      //this.#changeMode();
     });
 
     this.#popupComponent.setCloseClickHandler(() => {

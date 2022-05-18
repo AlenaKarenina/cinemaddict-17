@@ -20,8 +20,13 @@ const createFilmDetailsPopupTemplate = (movie) => {
       },
       ageRating
     },
-    comments
+    comments,
+    userDetails
   } = movie;
+
+  const getControlClassName = (option) => option
+    ? 'film-details__control-button--active'
+    : '';
 
   return (`
   <section class="film-details">
@@ -84,9 +89,9 @@ const createFilmDetailsPopupTemplate = (movie) => {
           </div>
         </div>
         <section class="film-details__controls">
-          <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-          <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${getControlClassName(userDetails.watchlist)}" id="watchlist" name="watchlist">Add to watchlist</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watched ${getControlClassName(userDetails.alreadyWatched)}" id="watched" name="watched">Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--favorite ${getControlClassName(userDetails.favorite)}" id="favorite" name="favorite">Add to favorites</button>
         </section>
       </div>
       <div class="film-details__bottom-container">

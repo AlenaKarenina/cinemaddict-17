@@ -122,10 +122,10 @@ export const genetateMovieCard = () => {
       'description': description[getRandomInteger(0, 5)],
     },
     'userDetails': {
-      'watchlist': Boolean(getRandomInteger(0, CARD_COUNT)),
-      'alreadyWatched': Boolean(getRandomInteger(0, CARD_COUNT)),
+      'watchlist': Boolean(getRandomInteger(0, 1)),
+      'alreadyWatched': Boolean(getRandomInteger(0, 1)),
       'watchingDate': '2019-04-12T16:12:32.554Z',
-      'favorite': Boolean(getRandomInteger(0, CARD_COUNT))
+      'favorite': Boolean(getRandomInteger(0, 1))
     }
   };
 };
