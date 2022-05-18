@@ -7,6 +7,8 @@ const Mode = {
   OPENED: 'OPENED',
 };
 
+const body = document.querySelector('body');
+
 export default class FilmPresenter {
   #filmListContainer = null;
   #filmComponent = null;
@@ -77,8 +79,8 @@ export default class FilmPresenter {
   };
 
   #openPopup = () => {
-    render(this.#popupComponent, document.body);
-    document.body.classList.add('hide-overflow');
+    render(this.#popupComponent, body);
+    body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#onEscKeyDown);
 
     this.#changeMode();
@@ -87,7 +89,7 @@ export default class FilmPresenter {
 
   #closePopup = () => {
     remove(this.#popupComponent);
-    document.body.classList.remove('hide-overflow');
+    body.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this.#onEscKeyDown);
 
     this.#mode = Mode.DEFAULT;
@@ -101,14 +103,14 @@ export default class FilmPresenter {
   };
 
   #onWatchListClick = () => {
-    this.#changeData({...this.#movie, watchlist: !this.#movie.userDetails.watchlist});
+    this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}});
   };
 
   #onAlreadyWatchedClick = () => {
-    this.#changeData({...this.#movie, alreadyWatched: !this.#movie.userDetails.alreadyWatched});
+    this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}});
   };
 
   #onFavoriteClick = () => {
-    this.#changeData({...this.#movie, favorite: !this.#movie.userDetails.favorite});
+    this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}});
   };
 }

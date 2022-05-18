@@ -1,4 +1,3 @@
-import {CARD_COUNT} from '../const.js';
 import {getRandomInteger} from '../utils/common.js';
 import CommentsModel from '../model/comments-model.js';
 import {nanoid} from 'nanoid';

@@ -160,7 +160,8 @@ export default class PopupFilmView extends AbstractView {
     this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchListClickHandler);
   };
 
-  #watchListClickHandler = () => {
+  #watchListClickHandler = (evt) => {
+    evt.preventDefault();
     this._callback.toWatchListClick();
   };
 
@@ -169,7 +170,8 @@ export default class PopupFilmView extends AbstractView {
     this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#alreadyWatchedClickHandler);
   };
 
-  #alreadyWatchedClickHandler = () => {
+  #alreadyWatchedClickHandler = (evt) => {
+    evt.preventDefault();
     this._callback.alreadyWatchedClick();
   };
 
@@ -178,7 +180,8 @@ export default class PopupFilmView extends AbstractView {
     this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
   };
 
-  #favoriteClickHandler = () => {
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
     this._callback.favoriteClick();
   };
 }
