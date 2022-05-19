@@ -1,4 +1,4 @@
-import {FilterType, FilterNames} from '../const.js';
+import {FilterType, FilterName} from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 export default class MainNavigationView extends AbstractView {
@@ -17,7 +17,7 @@ export default class MainNavigationView extends AbstractView {
       .map(([name, func]) => this.#generateMainNavigationTemplate(
         {
           name: name,
-          title: FilterNames[name],
+          title: FilterName[name],
           count: (name !== FilterType.ALL) ? func().length : ''
         }, this.#active))
       .join('');

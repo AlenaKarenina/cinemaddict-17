@@ -1,6 +1,6 @@
-import {CARD_COUNT} from '../const.js';
 import {getRandomInteger} from '../utils/common.js';
 import CommentsModel from '../model/comments-model.js';
+import {nanoid} from 'nanoid';
 
 const titles = [
   'Made for Each other',
@@ -99,7 +99,7 @@ export const genetateMovieCard = () => {
   const id = getRandomInteger(1, 5);
   return {
 
-    'id': id,
+    'id': nanoid(),
     'comments': [
       ...commentsList.getCommentsById(id)
     ],
@@ -121,10 +121,10 @@ export const genetateMovieCard = () => {
       'description': description[getRandomInteger(0, 5)],
     },
     'userDetails': {
-      'watchlist': getRandomInteger(0, CARD_COUNT),
-      'alreadyWatched': getRandomInteger(0, CARD_COUNT),
+      'watchlist': Boolean(getRandomInteger(0, 1)),
+      'alreadyWatched': Boolean(getRandomInteger(0, 1)),
       'watchingDate': '2019-04-12T16:12:32.554Z',
-      'favorite': getRandomInteger(0, CARD_COUNT)
+      'favorite': Boolean(getRandomInteger(0, 1))
     }
   };
 };

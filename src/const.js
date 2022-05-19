@@ -9,11 +9,13 @@ const FilterType = {
   FAVORITES: 'favorites'
 };
 
-const FilterNames = {
+const FilterName = {
   [FilterType.ALL]: 'All movies',
   [FilterType.WATCHLIST]: 'Watchlist',
   [FilterType.HISTORY]: 'History',
   [FilterType.FAVORITES]: 'Favorites'
 };
 
-export {CARD_COUNT, COMMENT_COUNT, FilterType, FilterNames};
+const SHOW_FILM_COUNT_STEP = 5;
+
+export {CARD_COUNT, COMMENT_COUNT, FilterType, FilterName, SHOW_FILM_COUNT_STEP};
