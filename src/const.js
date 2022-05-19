@@ -16,6 +16,12 @@ const FilterName = {
   [FilterType.FAVORITES]: 'Favorites'
 };
 
+const SortType = {
+  DEFAULT: 'default',
+  DATE: 'date',
+  RATING: 'rating'
+};
+
 const SHOW_FILM_COUNT_STEP = 5;
 
-export {CARD_COUNT, COMMENT_COUNT, FilterType, FilterName, SHOW_FILM_COUNT_STEP};
+export {CARD_COUNT, COMMENT_COUNT, FilterType, FilterName, SHOW_FILM_COUNT_STEP, SortType};
