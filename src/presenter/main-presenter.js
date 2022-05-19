@@ -80,8 +80,15 @@ export default class FilmsPresenter {
     this.#filmPresenter.set(movie.id, filmPresenter);
   };
 
+  #handleSortTypeChange = (sortType) => {
+    // - Сортируем задачи
+    // - Очищаем список
+    // - Рендерим список заново
+  };
+
   #renderSort = () => {
     render(this.#sortComponent, this.#filmListContainer);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderFilmsList = () => {
