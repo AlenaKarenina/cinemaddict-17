@@ -153,6 +153,7 @@ export default class PopupFilmView extends AbstractView {
   #closeClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.closeClick();
+    document.body.classList.remove('hide-overflow');
   };
 
   setWatchlistClickHandler = (callback) => {
