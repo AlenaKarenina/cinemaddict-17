@@ -165,7 +165,7 @@ export default class PopupFilmView extends AbstractStatefulView {
 
   #textInputHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({
+    this._setState({
       comment: evt.target.value,
     });
   };
