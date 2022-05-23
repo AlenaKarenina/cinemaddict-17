@@ -156,11 +156,7 @@ export default class PopupFilmView extends AbstractStatefulView {
     super();
     this._state = PopupFilmView.parseCommentToState(comment);
 
-    this.element.querySelector('.film-details__emoji-list')
-      .addEventListener('change', this.#emojiChangeHandler);
-
-    this.element.querySelector('.film-details__comment-input')
-      .addEventListener('input', this.#textInputHandler);
+    this.#setInnerHandlers();
   }
 
   get template() {
@@ -183,6 +179,18 @@ export default class PopupFilmView extends AbstractStatefulView {
 
   static parseCommentToState = (comment) => ({...comment});
   static parseStateToComment = (state) => ({...state});
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-details__emoji-list')
+      .addEventListener('change', this.#emojiChangeHandler);
+
+    this.element.querySelector('.film-details__comment-input')
+      .addEventListener('input', this.#textInputHandler);
+  };
 
   setCloseClickHandler = (callback) => {
     this._callback.closeClick = callback;
