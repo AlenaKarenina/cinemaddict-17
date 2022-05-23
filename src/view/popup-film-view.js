@@ -2,11 +2,6 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeDueDate} from '../utils/task.js';
 import CommentPopupView from './comment-popup-view.js';
 
-const BLANK_COMMENT = {
-  comment: '',
-  emotion: null,
-};
-
 const createFilmDetailsPopupTemplate = (movie) => {
 
   const {
@@ -27,10 +22,11 @@ const createFilmDetailsPopupTemplate = (movie) => {
     },
     comments,
     userDetails,
+    emotionId
   } = movie;
 
-  const createEmotion = () => (comments.emotion)
-    ? `<img src="./images/emoji/${comments.emotion}.png" width="55" height="55" alt="emoji">`
+  const createEmotion = () => (emotionId)
+    ? `<img src="./images/emoji/${emotionId.split('-')[1]}.png" width="55" height="55" alt="emoji">`
     : '';
 
   const createDescription = () => (description)
@@ -171,17 +167,26 @@ export default class PopupFilmView extends AbstractStatefulView {
   };
 
   #emojiChangeHandler = (evt) => {
-    evt.preventDefault();
-    this.updateElement({
-      emotion: evt.target.value,
-    });
+    if (evt.target.nodeName === 'INPUT') {
+      evt.preventDefault();
+      const scrollPosition = this.element.scrollTop;
+      this.updateElement({
+        emotionId: evt.target.id,
+      });
+      this.element.scrollTop = scrollPosition;
+    }
   };
 
-  static parseCommentToState = (comment) => ({...comment});
+  static parseCommentToState = (comment) => ({...comment, emotionId: null});
   static parseStateToComment = (state) => ({...state});
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+
+    this.setCloseClickHandler(this._callback.closePopup);
+    this.setWatchlistClickHandler(this._callback.onWatchListClick);
+    this.setAlreadyWatchedClickHandler(this._callback.onAlreadyWatchedClick);
+    this.setFavoriteClickHandler(this._callback.onFavoriteClick);
   };
 
   #setInnerHandlers = () => {
