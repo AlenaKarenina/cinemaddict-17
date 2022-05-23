@@ -152,14 +152,34 @@ const createFilmDetailsPopupTemplate = (movie) => {
 
 export default class PopupFilmView extends AbstractStatefulView {
 
-  constructor (comment) {
+  constructor (comment = BLANK_COMMENT) {
     super();
     this._state = PopupFilmView.parseCommentToState(comment);
+
+    this.element.querySelector('.film-details__emoji-list')
+      .addEventListener('change', this.#emojiChangeHandler);
+
+    this.element.querySelector('.film-details__comment-input')
+      .addEventListener('input', this.#textInputHandler);
   }
 
   get template() {
     return createFilmDetailsPopupTemplate(this._state);
   }
+
+  #textInputHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      comment: evt.target.value,
+    });
+  };
+
+  #emojiChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      emotion: evt.target.value,
+    });
+  };
 
   static parseCommentToState = (comment) => ({...comment});
   static parseStateToComment = (state) => ({...state});
