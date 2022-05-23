@@ -1,6 +1,11 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeDueDate} from '../utils/task.js';
 import CommentPopupView from './comment-popup-view.js';
+
+const BLANK_COMMENT = {
+  comment: '',
+  emotion: null,
+};
 
 const createFilmDetailsPopupTemplate = (movie) => {
 
@@ -21,8 +26,16 @@ const createFilmDetailsPopupTemplate = (movie) => {
       ageRating
     },
     comments,
-    userDetails
+    userDetails,
   } = movie;
+
+  const createEmotion = () => (comments.emotion)
+    ? `<img src="./images/emoji/${comments.emotion}.png" width="55" height="55" alt="emoji">`
+    : '';
+
+  const createDescription = () => (description)
+    ? `${description}`
+    : '';
 
   const getControlClassName = (option) => option
     ? 'film-details__control-button--active'
@@ -104,9 +117,13 @@ const createFilmDetailsPopupTemplate = (movie) => {
     }, '')}
           </ul>
           <div class="film-details__new-comment">
-            <div class="film-details__add-emoji-label"></div>
+            <div class="film-details__add-emoji-label">
+              ${createEmotion()}
+            </div>
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">
+                ${createDescription()}
+              </textarea>
             </label>
             <div class="film-details__emoji-list">
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
@@ -133,17 +150,19 @@ const createFilmDetailsPopupTemplate = (movie) => {
   </section>`);
 };
 
-export default class PopupFilmView extends AbstractView {
-  #movie = null;
+export default class PopupFilmView extends AbstractStatefulView {
 
-  constructor(movie) {
+  constructor (comment) {
     super();
-    this.#movie = movie;
+    this._state = PopupFilmView.parseCommentToState(comment);
   }
 
   get template() {
-    return createFilmDetailsPopupTemplate(this.#movie);
+    return createFilmDetailsPopupTemplate(this._state);
   }
+
+  static parseCommentToState = (comment) => ({...comment});
+  static parseStateToComment = (state) => ({...state});
 
   setCloseClickHandler = (callback) => {
     this._callback.closeClick = callback;
