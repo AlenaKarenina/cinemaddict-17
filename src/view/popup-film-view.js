@@ -148,7 +148,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
 
 export default class PopupFilmView extends AbstractStatefulView {
 
-  constructor (comment = BLANK_COMMENT) {
+  constructor (comment) {
     super();
     this._state = PopupFilmView.parseCommentToState(comment);
 
@@ -195,6 +195,12 @@ export default class PopupFilmView extends AbstractStatefulView {
 
     this.element.querySelector('.film-details__comment-input')
       .addEventListener('input', this.#textInputHandler);
+  };
+
+  reset = (comment) => {
+    this.updateElement(
+      PopupFilmView.parseCommentToState(comment),
+    );
   };
 
   setCloseClickHandler = (callback) => {

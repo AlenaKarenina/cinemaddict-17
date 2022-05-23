@@ -71,6 +71,7 @@ export default class FilmPresenter {
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#closePopup();
+      this.#popupComponent.reset(this.#movie);
     }
   };
 
