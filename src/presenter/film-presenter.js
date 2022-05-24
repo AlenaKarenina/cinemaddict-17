@@ -96,6 +96,7 @@ export default class FilmPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      document.body.classList.remove('hide-overflow');
       this.#closePopup();
     }
   };
