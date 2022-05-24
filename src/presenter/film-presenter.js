@@ -90,6 +90,7 @@ export default class FilmPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
 
     this.#mode = Mode.DEFAULT;
+    this.#popupComponent.reset(this.#movie);
   };
 
   #onEscKeyDown = (evt) => {

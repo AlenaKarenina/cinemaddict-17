@@ -148,9 +148,9 @@ const createFilmDetailsPopupTemplate = (movie) => {
 
 export default class PopupFilmView extends AbstractStatefulView {
 
-  constructor (comment) {
+  constructor (movie) {
     super();
-    this._state = PopupFilmView.parseCommentToState(comment);
+    this._state = PopupFilmView.parseCommentToState(movie);
 
     this.#setInnerHandlers();
   }
@@ -177,29 +177,17 @@ export default class PopupFilmView extends AbstractStatefulView {
     }
   };
 
-  static parseCommentToState = (comment) => ({...comment, emotionId: null});
-  static parseStateToComment = (state) => ({...state});
-
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
-
-    this.setCloseClickHandler(this._callback.closePopup);
-    this.setWatchlistClickHandler(this._callback.onWatchListClick);
-    this.setAlreadyWatchedClickHandler(this._callback.onAlreadyWatchedClick);
-    this.setFavoriteClickHandler(this._callback.onFavoriteClick);
-  };
-
   #setInnerHandlers = () => {
     this.element.querySelector('.film-details__emoji-list')
-      .addEventListener('change', this.#emojiChangeHandler);
+      .addEventListener('click', this.#emojiChangeHandler);
 
     this.element.querySelector('.film-details__comment-input')
       .addEventListener('input', this.#textInputHandler);
   };
 
-  reset = (comment) => {
+  reset = (movie) => {
     this.updateElement(
-      PopupFilmView.parseCommentToState(comment),
+      PopupFilmView.parseCommentToState(movie),
     );
   };
 
@@ -243,4 +231,16 @@ export default class PopupFilmView extends AbstractStatefulView {
     evt.preventDefault();
     this._callback.favoriteClick();
   };
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+
+    this.setCloseClickHandler(this._callback.closeClick);
+    this.setWatchlistClickHandler(this._callback.toWatchListClick);
+    this.setAlreadyWatchedClickHandler(this._callback.alreadyWatchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  };
+
+  static parseCommentToState = (movie) => ({...movie, emotionId: null});
+  static parseStateToComment = (state) => ({...state});
 }
