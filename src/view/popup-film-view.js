@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizeDueDate} from '../utils/task.js';
+import {humanizeFormatDate} from '../utils/task.js';
 import CommentPopupView from './comment-popup-view.js';
 
 const createFilmDetailsPopupTemplate = (movie) => {
@@ -24,6 +24,8 @@ const createFilmDetailsPopupTemplate = (movie) => {
     userDetails,
     emotionId
   } = movie;
+
+  const releaseDate = humanizeFormatDate(date, 'D MMMM YYYY');
 
   const createEmotion = () => (emotionId)
     ? `<img src="./images/emoji/${emotionId.split('-')[1]}.png" width="55" height="55" alt="emoji">`
@@ -72,7 +74,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${humanizeDueDate(date)}</td>
+                <td class="film-details__cell">${releaseDate}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
