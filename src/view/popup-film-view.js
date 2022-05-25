@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizeDueDate} from '../utils/task.js';
+import {humanizeFormatDate, humanizeDurationFormat} from '../utils/task.js';
 import CommentPopupView from './comment-popup-view.js';
 
 const createFilmDetailsPopupTemplate = (movie) => {
@@ -25,13 +25,13 @@ const createFilmDetailsPopupTemplate = (movie) => {
     emotionId
   } = movie;
 
+  const releaseDate = humanizeFormatDate(date, 'D MMMM YYYY');
+
   const createEmotion = () => (emotionId)
     ? `<img src="./images/emoji/${emotionId.split('-')[1]}.png" width="55" height="55" alt="emoji">`
     : '';
 
-  const createDescription = () => (description)
-    ? `${description}`
-    : '';
+  const checked = (emoji) => emoji === emotionId ? 'checked' : '';
 
   const getControlClassName = (option) => option
     ? 'film-details__control-button--active'
@@ -74,11 +74,11 @@ const createFilmDetailsPopupTemplate = (movie) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${humanizeDueDate(date)}</td>
+                <td class="film-details__cell">${releaseDate}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${runtime}</td>
+                <td class="film-details__cell">${humanizeDurationFormat(runtime)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
@@ -117,24 +117,22 @@ const createFilmDetailsPopupTemplate = (movie) => {
               ${createEmotion()}
             </div>
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">
-                ${createDescription()}
-              </textarea>
+              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
             </label>
             <div class="film-details__emoji-list">
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${checked('emoji-smile')}>
               <label class="film-details__emoji-label" for="emoji-smile">
                 <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
               </label>
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${checked('emoji-sleeping')}>
               <label class="film-details__emoji-label" for="emoji-sleeping">
                 <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
               </label>
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${checked('emoji-puke')}>
               <label class="film-details__emoji-label" for="emoji-puke">
                 <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
               </label>
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${checked('emoji-angry')}>
               <label class="film-details__emoji-label" for="emoji-angry">
                 <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
               </label>

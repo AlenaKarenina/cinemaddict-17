@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizeDueDate} from '../utils/task.js';
+import {humanizeCommentDateTime} from '../utils/task.js';
 
 const createComment = (comments) => {
   const {comment, date, emotion, author} = comments;
@@ -13,7 +13,7 @@ const createComment = (comments) => {
       <p class="film-details__comment-text"> ${comment}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
-        <span class="film-details__comment-day">${humanizeDueDate(date)}</span>
+        <span class="film-details__comment-day">${humanizeCommentDateTime(date)}</span>
         <button class="film-details__comment-delete">Delete</button>
       </p>
     </div>
