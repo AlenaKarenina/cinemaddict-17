@@ -116,7 +116,7 @@ export const genetateMovieCard = () => {
         'date': dates[getRandomInteger(0, 5)],
         'releaseCountry': country.slice(0,[getRandomInteger(0, country.length - 1)])
       },
-      'runtime': getRuntime(timeFilms),
+      'runtime': getRandomInteger(90, 180),
       'genre': genreFilm.slice().splice(getRandomInteger(0, genreFilm.length - 1),[getRandomInteger(1, 2)]),
       'description': description[getRandomInteger(0, 5)],
     },

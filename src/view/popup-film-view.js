@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizeFormatDate} from '../utils/task.js';
+import {humanizeFormatDate, humanizeDurationFormat} from '../utils/task.js';
 import CommentPopupView from './comment-popup-view.js';
 
 const createFilmDetailsPopupTemplate = (movie) => {
@@ -78,7 +78,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${runtime}</td>
+                <td class="film-details__cell">${humanizeDurationFormat(runtime)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
