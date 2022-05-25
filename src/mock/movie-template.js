@@ -78,21 +78,6 @@ const dates = [
   '2020-04-12T16:12:32.554Z'
 ];
 
-const timeFilms = [
-  90,55,70,48,84,160
-];
-
-const getRuntime = (offer) => {
-  const runtime = [];
-  for (let i = 0; i < offer.length; i++) {
-    if(offer[i] % 60 === 0) {
-      runtime.push(`${offer[i]/60}h`);
-    }
-    runtime.push(`${Math.ceil(offer[i]/60)}h ${offer[i] % 60}m`);
-  }
-  return runtime[getRandomInteger(0, runtime.length - 1)];
-};
-
 const commentsList = new CommentsModel();
 
 export const genetateMovieCard = () => {
