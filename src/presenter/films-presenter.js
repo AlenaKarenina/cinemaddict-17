@@ -73,13 +73,6 @@ export default class FilmsPresenter {
     render(this.#loadMoreButtonComponent, this.#filmSection.element);
   };
 
-  #clearFilmList = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.destroy());
-    this.#filmPresenter.clear();
-    this.#renderedMovieCount = SHOW_FILM_COUNT_STEP;
-    remove(this.#loadMoreButtonComponent);
-  };
-
   #clearFilm = ({resetRenderedMovieCount = false, resetSortType = false} = {}) => {
     const movieCount = this.movies.length;
 
@@ -93,9 +86,6 @@ export default class FilmsPresenter {
     if (resetRenderedMovieCount) {
       this.#renderedMovieCount = SHOW_FILM_COUNT_STEP;
     } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
       this.#renderedMovieCount = Math.min(movieCount, this.#renderedMovieCount);
     }
 
@@ -123,19 +113,15 @@ export default class FilmsPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    //console.log(updateType, data);
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this.#filmPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
         this.#clearFilm();
         this.#renderMovie();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
         this.#clearFilm({resetRenderedMovieCount: true, resetSortType: true});
         this.#renderMovie();
         break;
@@ -154,8 +140,9 @@ export default class FilmsPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearFilmList({resetRenderedMovieCount: true});
-    this.#renderFilmsList();
+    this.#clearFilm({resetRenderedMovieCount: true});
+
+    this.#renderMovie();
   };
 
   #renderSort = () => {
@@ -166,18 +153,7 @@ export default class FilmsPresenter {
   };
 
   #renderFilmsList = () => {
-    const movieCount = this.movies.length;
-    const movies = this.movies.slice(0, Math.min(movieCount, SHOW_FILM_COUNT_STEP));
-
     render(this.#filmSection, this.#filmListContainer);
-
-    render(this.#filmContainer, this.#filmSection.element);
-
-    this.#renderFilms(movies);
-
-    if (movieCount > SHOW_FILM_COUNT_STEP) {
-      this.#renderLoadMoreButton();
-    }
   };
 
   #renderMovie = () => {
@@ -190,13 +166,13 @@ export default class FilmsPresenter {
     }
 
     this.#renderSort();
-
     render(this.#filmContainer, this.#filmSection.element);
+    this.#renderFilmsList();
 
-    this.#renderFilmsList(movies.slice(0, Math.min(movieCount, this.#renderedMovieCount)));
+    this.#renderFilms(movies.slice(0, Math.min(movieCount, this.#renderedMovieCount)));
 
     if (movieCount > this.#renderedMovieCount) {
-      //this.#renderLoadMoreButton();
+      this.#renderLoadMoreButton();
     }
   };
 }
