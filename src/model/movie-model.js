@@ -5,7 +5,7 @@ import {genetateMovieCard} from '../mock/movie-template.js';
 export default class MovieModel extends Observable {
   #movies = Array.from({length: CARD_COUNT}, genetateMovieCard);
 
-  get movie() {
+  get movies() {
     return this.#movies;
   }
 

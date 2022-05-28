@@ -6,7 +6,6 @@ import LoadMoreButtonView from '../view/load-more-button-view.js';
 import NoFilmCardView from '../view/no-film-card-view.js';
 import SortView from '../view/sort-view.js';
 import FilmPresenter from './film-presenter.js';
-import {updateItem} from '../utils/common.js';
 import {sortFilmsByRating, sortFilmsByDate} from '../utils/task.js';
 import {SortType} from '../const.js';
 
@@ -18,44 +17,48 @@ export default class FilmsPresenter {
   #noFilmComponent = new NoFilmCardView();
   #sortComponent = new SortView();
 
-  #sectionMovie = [];
   #movieModel = null;
   #filmListContainer = null;
   #renderedMovieCount = SHOW_FILM_COUNT_STEP;
 
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
-  #sourcedFilms = [];
 
   constructor(filmListContainer, movieModel) {
     this.#filmListContainer = filmListContainer;
     this.#movieModel = movieModel;
   }
 
-  get movie() {
+  get movies() {
+    switch (this.#currentSortType) {
+      case SortType.RATING:
+        return [...this.#movieModel.movies].sort(sortFilmsByRating);
+      case SortType.DATE:
+        return [...this.#movieModel.movies].sort(sortFilmsByDate);
+    }
+
     return this.#movieModel.movies;
   }
 
   init = () => {
-    this.#sectionMovie = [...this.#movieModel.movie];
-    this.#sourcedFilms = [...this.#movieModel.movie];
     this.#renderMovie();
   };
 
   #handleLoadMoreButtonClick = () => {
-    this.#renderFilms(this.#renderedMovieCount, this.#renderedMovieCount + SHOW_FILM_COUNT_STEP);
+    const movieCount = this.movies.length;
+    const newRenderedMovieCount = Math.min(movieCount, this.#renderedMovieCount + SHOW_FILM_COUNT_STEP);
+    const movies = this.movies.slice(this.#renderedMovieCount, newRenderedMovieCount);
 
-    this.#renderedMovieCount += SHOW_FILM_COUNT_STEP;
+    this.#renderFilms(movies);
+    this.#renderedMovieCount = newRenderedMovieCount;
 
-    if (this.#renderedMovieCount >= this.#sectionMovie.length) {
+    if (this.#renderedMovieCount >= movieCount) {
       remove(this.#loadMoreButtonComponent);
     }
   };
 
-  #renderFilms = (from, to) => {
-    this.#sectionMovie
-      .slice(from, to)
-      .forEach((element) => this.#createFilm(element));
+  #renderFilms = (movies) => {
+    movies.forEach((element) => this.#createFilm(element));
   };
 
   #renderNoFilms = () => {
@@ -79,24 +82,8 @@ export default class FilmsPresenter {
   };
 
   #handleFilmChange = (updatedTask) => {
-    this.#sectionMovie = updateItem(this.#sectionMovie, updatedTask);
-    this.#sourcedFilms = updateItem(this.#sourcedFilms, updatedTask);
+    // Здесь будем вызывать обновление модели
     this.#filmPresenter.get(updatedTask.id).init(updatedTask);
-  };
-
-  #sortFilms = (sortType) => {
-    switch (sortType) {
-      case SortType.RATING:
-        this.#sectionMovie.sort(sortFilmsByRating);
-        break;
-      case SortType.DATE:
-        this.#sectionMovie.sort(sortFilmsByDate);
-        break;
-      default:
-        this.#sectionMovie = [...this.#sourcedFilms];
-    }
-
-    this.#currentSortType = sortType;
   };
 
   #createFilm = (movie) => {
@@ -109,11 +96,9 @@ export default class FilmsPresenter {
     if (this.#currentSortType === sortType) {
       return;
     }
-    // - Сортируем задачи
-    this.#sortFilms(sortType);
-    // - Очищаем список
+
+    this.#currentSortType = sortType;
     this.#clearFilmList();
-    // - Рендерим список заново
     this.#renderFilmsList();
   };
 
@@ -123,18 +108,22 @@ export default class FilmsPresenter {
   };
 
   #renderFilmsList = () => {
+    const movieCount = this.movies.length;
+    const movies = this.movies.slice(0, Math.min(movieCount, SHOW_FILM_COUNT_STEP));
+
     render(this.#filmSection, this.#filmListContainer);
+
     render(this.#filmContainer, this.#filmSection.element);
 
-    this.#renderFilms(0, Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP));
+    this.#renderFilms(movies);
 
-    if (this.#sectionMovie.length > SHOW_FILM_COUNT_STEP) {
+    if (movieCount > SHOW_FILM_COUNT_STEP) {
       this.#renderLoadMoreButton();
     }
   };
 
   #renderMovie = () => {
-    if (this.#sectionMovie.length === 0) {
+    if (this.movies.length === 0) {
       this.#renderNoFilms();
       return;
     }
