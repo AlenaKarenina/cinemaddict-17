@@ -12,9 +12,9 @@ export default class FilmsPresenter {
 
   #filmSection = new FilmSectionView;
   #filmContainer = new FilmContainerView;
-  #loadMoreButtonComponent = new LoadMoreButtonView();
+  #loadMoreButtonComponent = null;
   #noFilmComponent = new NoFilmCardView();
-  #sortComponent = new SortView();
+  #sortComponent = null;
 
   #movieModel = null;
   #filmListContainer = null;
@@ -67,8 +67,10 @@ export default class FilmsPresenter {
   };
 
   #renderLoadMoreButton = () => {
-    render(this.#loadMoreButtonComponent, this.#filmSection.element);
+    this.#loadMoreButtonComponent = new LoadMoreButtonView();
     this.#loadMoreButtonComponent.setClickLoadHandler(this.#handleLoadMoreButtonClick);
+
+    render(this.#loadMoreButtonComponent, this.#filmSection.element);
   };
 
   #clearFilmList = () => {
@@ -76,6 +78,30 @@ export default class FilmsPresenter {
     this.#filmPresenter.clear();
     this.#renderedMovieCount = SHOW_FILM_COUNT_STEP;
     remove(this.#loadMoreButtonComponent);
+  };
+
+  #clearFilm = ({resetRenderedMovieCount = false, resetSortType = false} = {}) => {
+    const movieCount = this.movies.length;
+
+    this.#filmPresenter.forEach((presenter) => presenter.destroy());
+    this.#filmPresenter.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#noFilmComponent);
+    remove(this.#loadMoreButtonComponent);
+
+    if (resetRenderedMovieCount) {
+      this.#renderedMovieCount = SHOW_FILM_COUNT_STEP;
+    } else {
+      // На случай, если перерисовка доски вызвана
+      // уменьшением количества задач (например, удаление или перенос в архив)
+      // нужно скорректировать число показанных задач
+      this.#renderedMovieCount = Math.min(movieCount, this.#renderedMovieCount);
+    }
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DEFAULT;
+    }
   };
 
   #handleModeChange = () => {
@@ -97,7 +123,7 @@ export default class FilmsPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    console.log(updateType, data);
+    //console.log(updateType, data);
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда поменялось описание)
@@ -105,9 +131,13 @@ export default class FilmsPresenter {
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)
+        this.#clearFilm();
+        this.#renderMovie();
         break;
       case UpdateType.MAJOR:
         // - обновить всю доску (например, при переключении фильтра)
+        this.#clearFilm({resetRenderedMovieCount: true, resetSortType: true});
+        this.#renderMovie();
         break;
     }
   };
@@ -124,13 +154,15 @@ export default class FilmsPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearFilmList();
+    this.#clearFilmList({resetRenderedMovieCount: true});
     this.#renderFilmsList();
   };
 
   #renderSort = () => {
-    render(this.#sortComponent, this.#filmListContainer);
+    this.#sortComponent = new SortView(this.#currentSortType);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+
+    render(this.#sortComponent, this.#filmListContainer);
   };
 
   #renderFilmsList = () => {
@@ -149,12 +181,22 @@ export default class FilmsPresenter {
   };
 
   #renderMovie = () => {
-    if (this.movies.length === 0) {
+    const movies = this.movies;
+    const movieCount = movies.length;
+
+    if (movieCount === 0) {
       this.#renderNoFilms();
       return;
     }
 
     this.#renderSort();
-    this.#renderFilmsList();
+
+    render(this.#filmContainer, this.#filmSection.element);
+
+    this.#renderFilmsList(movies.slice(0, Math.min(movieCount, this.#renderedMovieCount)));
+
+    if (movieCount > this.#renderedMovieCount) {
+      //this.#renderLoadMoreButton();
+    }
   };
 }
