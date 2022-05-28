@@ -32,6 +32,10 @@ export default class FilmsPresenter {
     this.#movieModel = movieModel;
   }
 
+  get movie() {
+    return this.#movieModel.movies;
+  }
+
   init = () => {
     this.#sectionMovie = [...this.#movieModel.movie];
     this.#sourcedFilms = [...this.#movieModel.movie];

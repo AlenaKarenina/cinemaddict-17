@@ -1,7 +1,8 @@
+import Observable from '../framework/observable.js';
 import {CARD_COUNT, FilterType} from '../const.js';
 import {genetateMovieCard} from '../mock/movie-template.js';
 
-export default class MovieModel {
+export default class MovieModel extends Observable {
   #movies = Array.from({length: CARD_COUNT}, genetateMovieCard);
 
   get movie() {
