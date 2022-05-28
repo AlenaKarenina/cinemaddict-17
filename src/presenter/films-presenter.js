@@ -27,6 +27,8 @@ export default class FilmsPresenter {
   constructor(filmListContainer, movieModel) {
     this.#filmListContainer = filmListContainer;
     this.#movieModel = movieModel;
+
+    this.#movieModel.addObserver(this.#handleModelEvent);
   }
 
   get movies() {
@@ -81,13 +83,24 @@ export default class FilmsPresenter {
     this.#filmPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handleFilmChange = (updatedTask) => {
-    // Здесь будем вызывать обновление модели
-    this.#filmPresenter.get(updatedTask.id).init(updatedTask);
+  #handleViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   };
 
   #createFilm = (movie) => {
-    const filmPresenter = new FilmPresenter(this.#filmContainer.element, this.#handleFilmChange, this.#handleModeChange);
+    const filmPresenter = new FilmPresenter(this.#filmContainer.element, this.#handleViewAction, this.#handleModeChange);
     filmPresenter.init(movie);
     this.#filmPresenter.set(movie.id, filmPresenter);
   };
