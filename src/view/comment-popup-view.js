@@ -32,3 +32,5 @@ export default class CommentPopupView extends AbstractView {
     return createComment(this.#comment);
   }
 }
+
+export {createComment};

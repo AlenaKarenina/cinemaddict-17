@@ -22,7 +22,7 @@ export default class MovieModel extends Observable {
     });
   }
 
-  updateTask = (updateType, update) => {
+  updateFilm = (updateType, update) => {
     const index = this.#movies.findIndex((movie) => movie.id === update.id);
 
     if (index === -1) {
@@ -36,29 +36,5 @@ export default class MovieModel extends Observable {
     ];
 
     this._notify(updateType, update);
-  };
-
-  addTask = (updateType, update) => {
-    this.#movies = [
-      update,
-      ...this.#movies,
-    ];
-
-    this._notify(updateType, update);
-  };
-
-  deleteTask = (updateType, update) => {
-    const index = this.#movies.findIndex((movie) => movie.id === update.id);
-
-    if (index === -1) {
-      throw new Error('Can\'t delete unexisting movie');
-    }
-
-    this.#movies = [
-      ...this.#movies.slice(0, index),
-      ...this.#movies.slice(index + 1),
-    ];
-
-    this._notify(updateType);
   };
 }
