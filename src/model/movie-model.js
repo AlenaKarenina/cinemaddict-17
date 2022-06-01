@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import {CARD_COUNT, FilterType} from '../const.js';
+import {CARD_COUNT} from '../const.js';
 import {genetateMovieCard} from '../mock/movie-template.js';
 
 export default class MovieModel extends Observable {
@@ -11,15 +11,6 @@ export default class MovieModel extends Observable {
 
   get count() {
     return this.#movies.length;
-  }
-
-  get filtered() {
-    return ({
-      [FilterType.ALL]: () => this.#movies,
-      [FilterType.WATCHLIST]: () => this.#movies.filter((movie) => movie.userDetails.watchlist),
-      [FilterType.HISTORY]: () => this.#movies.filter((movie) => movie.userDetails.alreadyWatched),
-      [FilterType.FAVORITES]: () => this.#movies.filter((movie) => movie.userDetails.favorite)
-    });
   }
 
   updateFilm = (updateType, update) => {
