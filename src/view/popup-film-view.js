@@ -227,16 +227,16 @@ export default class PopupFilmView extends AbstractStatefulView {
     this._callback.favoriteClick();
   };
 
+  setAddCommentHandler = (callback) => {
+    this._callback.addComment = callback;
+    document.addEventListener('keydown', this.#onAddComment);
+  };
+
   #onAddComment = (evt) => {
     if (evt.ctrlKey && evt.key === 'Enter') {
       evt.preventDefault();
       this._callback.addComment(PopupFilmView.parseStateToComment(this._state));
     }
-  };
-
-  setAddCommentHandler = (callback) => {
-    this._callback.addComment = callback;
-    document.addEventListener('keydown', this.#onAddComment);
   };
 
   setDeleteCommentHandler = (callback) => {

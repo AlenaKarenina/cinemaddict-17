@@ -37,9 +37,6 @@ export default class FilmPresenter {
     this.#filmComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
     this.#filmComponent.setFavoriteClickHandler(this.#onFavoriteClick);
 
-    this.#popupComponent.setDeleteCommentHandler(this.#onDeleteComment);
-    this.#popupComponent.setAddCommentHandler(this.#onAddComment);
-
     this.#filmComponent.setClickHandler(this.#openPopup);
 
     if (prevFilmComponent === null) {
@@ -65,9 +62,6 @@ export default class FilmPresenter {
     this.#popupComponent.setWatchlistClickHandler(this.#onWatchListClick);
     this.#popupComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
     this.#popupComponent.setFavoriteClickHandler(this.#onFavoriteClick);
-
-    this.#popupComponent.setDeleteCommentHandler(this.#onDeleteComment);
-    this.#popupComponent.setAddCommentHandler(this.#onAddComment);
   };
 
   destroy = () => {
@@ -129,23 +123,6 @@ export default class FilmPresenter {
       UserAction.UPDATE_MOVIE,
       UpdateType.PATCH,
       {...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}},
-    );
-  };
-
-  #onDeleteComment = (id) => {
-    const newComments = this.#movie.comments.filter((comment) => comment.id !== id);
-
-    this.#changeData(
-      UserAction.DELETE_COMMENT,
-      UpdateType.PATCH,
-      { ...this.#movie, comments: newComments });
-  };
-
-  #onAddComment = (update) => {
-    this.#changeData(
-      UserAction.ADD_COMMENT,
-      UpdateType.PATCH,
-      update
     );
   };
 }
