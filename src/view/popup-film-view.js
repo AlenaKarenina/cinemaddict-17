@@ -146,6 +146,8 @@ export default class PopupFilmView extends AbstractStatefulView {
     this._state = PopupFilmView.parseCommentToState(movie);
 
     this.#setInnerHandlers();
+
+    this.setDeleteCommentHandler();
   }
 
   get template() {
@@ -225,18 +227,6 @@ export default class PopupFilmView extends AbstractStatefulView {
     this._callback.favoriteClick();
   };
 
-  setDeleteCommentHandler = (callback) => {
-    this._callback.deleteComment = callback;
-    this.element
-      .querySelector('.film-details__comments-list')
-      .addEventListener('click', this.#onCommentDelete);
-  };
-
-  #onCommentDelete = (evt) => {
-    evt.preventDefault();
-    this._callback.deleteComment(evt.target.id);
-  };
-
   #onAddComment = (evt) => {
     if (evt.ctrlKey && evt.key === 'Enter') {
       evt.preventDefault();
@@ -247,6 +237,31 @@ export default class PopupFilmView extends AbstractStatefulView {
   setAddCommentHandler = (callback) => {
     this._callback.addComment = callback;
     document.addEventListener('keydown', this.#onAddComment);
+  };
+
+  setDeleteCommentHandler = (callback) => {
+    this._callback.deleteComment = callback;
+
+    const deleteButtons = this.element.querySelectorAll('.film-details__comment-delete');
+    deleteButtons.forEach((button) => {
+      button.addEventListener('click', this.#onCommentDelete);
+    });
+  };
+
+  #onCommentDelete = (evt) => {
+    evt.preventDefault();
+    const idDelete = Number(evt.target.id);
+
+    const index = this._state.comments.findIndex((item) => item.id === idDelete);
+
+    this._state.comments = [
+      ...this._state.comments.slice(0, index),
+      ...this._state.comments.slice(index + 1),
+    ];
+
+    this.updateElement({
+      ...this._state
+    });
   };
 
   _restoreHandlers = () => {
