@@ -11,10 +11,10 @@ const NoFilmCardTextType = {
 const emptyMovieSection = (filterType) => {
   const noFilmCardTextValue = NoFilmCardTextType[filterType];
 
-  return (
-    `<p class="board__no-tasks">
+  return (`
+    <h2 class="films-list__title">
       ${noFilmCardTextValue}
-    </p>`);
+    </h2>`);
 };
 
 export default class NoFilmCardView extends AbstractView {
