@@ -7,6 +7,7 @@ import NoFilmCardView from '../view/no-film-card-view.js';
 import SortView from '../view/sort-view.js';
 import FilmPresenter from './film-presenter.js';
 import {sortFilmsByRating, sortFilmsByDate} from '../utils/task.js';
+import {filter} from '../utils/filter.js';
 
 export default class FilmsPresenter {
 
@@ -23,22 +24,30 @@ export default class FilmsPresenter {
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
 
-  constructor(filmListContainer, movieModel) {
+  #filterModel = null;
+
+  constructor(filmListContainer, movieModel, filterModel) {
     this.#filmListContainer = filmListContainer;
     this.#movieModel = movieModel;
+    this.#filterModel = filterModel;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get movies() {
+    const filterType = this.#filterModel.filter;
+    const movies = this.#movieModel.movies;
+    const filteredMovies = filter[filterType](movies);
+
     switch (this.#currentSortType) {
       case SortType.RATING:
-        return [...this.#movieModel.movies].sort(sortFilmsByRating);
+        return filteredMovies.sort(sortFilmsByRating);
       case SortType.DATE:
-        return [...this.#movieModel.movies].sort(sortFilmsByDate);
+        return filteredMovies.sort(sortFilmsByDate);
     }
 
-    return this.#movieModel.movies;
+    return filteredMovies;
   }
 
   init = () => {

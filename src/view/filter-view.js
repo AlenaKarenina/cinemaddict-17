@@ -19,9 +19,7 @@ const createFilterTemplate = (filters, currentFilterType) => {
     .join('');
 
   return `<nav class="main-navigation">
-    <div class="main-navigation__items">
       ${filterItemsTemplate}
-    </div>
   </nav>`;
 };
 

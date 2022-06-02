@@ -12,7 +12,7 @@ const pageFooter = document.querySelector('.footer');
 
 const movieModel = new MovieModel();
 const filterModel = new FilterModel();
-const containerFilmsPresenter = new FilmsPresenter(pageMain, movieModel);
+const containerFilmsPresenter = new FilmsPresenter(pageMain, movieModel, filterModel);
 const filterPresenter = new FilterPresenter(pageMain, filterModel, movieModel);
 
 render(new ProfileView, pageHeader);
