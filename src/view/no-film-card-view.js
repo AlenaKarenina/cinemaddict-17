@@ -1,23 +1,31 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import {FilterType} from '../const.js';
 
-const emptyMovieSection = () => (`
-  <section class="films">
-    <section class="films-list">
-      <h2 class="films-list__title">There are no movies in our database</h2>
+const NoFilmCardTextType = {
+  [FilterType.ALL]: 'There are no movies in our database',
+  [FilterType.WATCHLIST]: 'There are no movies to watch now',
+  [FilterType.HISTORY]: 'There are no watched movies now',
+  [FilterType.FAVORITES]: 'There are no favorite movies now',
+};
 
-      <!--
-        Значение отображаемого текста зависит от выбранного фильтра:
-          * All movies – 'There are no movies in our database'
-          * Watchlist — 'There are no movies to watch now';
-          * History — 'There are no watched movies now';
-          * Favorites — 'There are no favorite movies now'.
-      -->
-    </section>
-  </section>
-`);
+const emptyMovieSection = (filterType) => {
+  const noFilmCardTextValue = NoFilmCardTextType[filterType];
+
+  return (
+    `<p class="board__no-tasks">
+      ${noFilmCardTextValue}
+    </p>`);
+};
 
 export default class NoFilmCardView extends AbstractView {
+  #filterType = null;
+
+  constructor(filterType) {
+    super();
+    this.#filterType = filterType;
+  }
+
   get template() {
-    return emptyMovieSection();
+    return emptyMovieSection(this.#filterType);
   }
 }

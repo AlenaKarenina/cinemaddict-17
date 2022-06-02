@@ -1,5 +1,5 @@
 import {render, remove} from '../framework/render.js';
-import {SHOW_FILM_COUNT_STEP, SortType, UpdateType, UserAction} from '../const.js';
+import {SHOW_FILM_COUNT_STEP, SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import FilmSectionView from '../view/film-section-view.js';
 import FilmContainerView from '../view/film-container-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
@@ -14,7 +14,7 @@ export default class FilmsPresenter {
   #filmSection = new FilmSectionView;
   #filmContainer = new FilmContainerView;
   #loadMoreButtonComponent = null;
-  #noFilmComponent = new NoFilmCardView();
+  #noFilmComponent = null;
   #sortComponent = null;
 
   #movieModel = null;
@@ -23,6 +23,7 @@ export default class FilmsPresenter {
 
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
+  #filterType = FilterType.ALL;
 
   #filterModel = null;
 
@@ -36,9 +37,9 @@ export default class FilmsPresenter {
   }
 
   get movies() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const movies = this.#movieModel.movies;
-    const filteredMovies = filter[filterType](movies);
+    const filteredMovies = filter[this.#filterType](movies);
 
     switch (this.#currentSortType) {
       case SortType.RATING:
@@ -72,6 +73,7 @@ export default class FilmsPresenter {
   };
 
   #renderNoFilms = () => {
+    this.#noFilmComponent = new NoFilmCardView(this.#filterType);
     render(this.#noFilmComponent, this.#filmListContainer);
   };
 
@@ -91,6 +93,10 @@ export default class FilmsPresenter {
     remove(this.#sortComponent);
     remove(this.#noFilmComponent);
     remove(this.#loadMoreButtonComponent);
+
+    if (this.#noFilmComponent) {
+      remove(this.#noFilmComponent);
+    }
 
     if (resetRenderedMovieCount) {
       this.#renderedMovieCount = SHOW_FILM_COUNT_STEP;
