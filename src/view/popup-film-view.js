@@ -15,6 +15,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
       actors,
       runtime,
       description,
+      genre,
       release: {
         date,
         releaseCountry
@@ -28,6 +29,21 @@ const createFilmDetailsPopupTemplate = (movie) => {
   } = movie;
 
   const releaseDate = humanizeFormatDate(date, 'D MMMM YYYY');
+
+  const createGenres = () => {
+    const genresLayout = genre.reduce((result, item) => (
+      `${result}
+        <span class="film-details__genre">${item}</span>`
+    ), '');
+
+    const genresTitle = genre.length === 1
+      ? 'Genre'
+      : 'Genres';
+
+    return `
+    <td class="film-details__term">${genresTitle}</td>
+    <td class="film-details__cell">${genresLayout}</td>`;
+  };
 
   const getControlClassName = (option) => option
     ? 'film-details__control-button--active'
@@ -103,11 +119,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
                 <td class="film-details__cell">${releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
-                <td class="film-details__term">Genres</td>
-                <td class="film-details__cell">
-                  <span class="film-details__genre">Drama</span>
-                  <span class="film-details__genre">Film-Noir</span>
-                  <span class="film-details__genre">Mystery</span></td>
+                ${createGenres(genre)}
               </tr>
             </table>
             <p class="film-details__film-description">
@@ -251,8 +263,8 @@ export default class PopupFilmView extends AbstractStatefulView {
   #onCommentDelete = (evt) => {
     evt.preventDefault();
     const scrollPosition = this.element.scrollTop;
-    const idDelete = Number(evt.target.dataset.buttonId);
-    const index = this._state.comments.findIndex((item) => item.id === idDelete);
+    const isDeleteButton = Number(evt.target.dataset.buttonId);
+    const index = this._state.comments.findIndex((item) => item.id === isDeleteButton);
 
     this._state.comments = [
       ...this._state.comments.slice(0, index),
