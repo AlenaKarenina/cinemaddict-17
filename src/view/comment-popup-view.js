@@ -15,7 +15,7 @@ const createComment = (comments) => {
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${humanizeCommentDateTime(date)}</span>
-        <button class="film-details__comment-delete" id="${id}">Delete</button>
+        <button class="film-details__comment-delete" data-button-id="${id}">Delete</button>
       </p>
     </div>
   </li>`);

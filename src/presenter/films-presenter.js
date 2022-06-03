@@ -74,7 +74,7 @@ export default class FilmsPresenter {
 
   #renderNoFilms = () => {
     this.#noFilmComponent = new NoFilmCardView(this.#filterType);
-    render(this.#noFilmComponent, this.#filmListContainer);
+    render(this.#noFilmComponent, this.#filmSection.element);
   };
 
   #renderLoadMoreButton = () => {

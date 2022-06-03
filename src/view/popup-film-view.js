@@ -250,8 +250,8 @@ export default class PopupFilmView extends AbstractStatefulView {
 
   #onCommentDelete = (evt) => {
     evt.preventDefault();
-    const idDelete = Number(evt.target.id);
-
+    const scrollPosition = this.element.scrollTop;
+    const idDelete = Number(evt.target.dataset.buttonId);
     const index = this._state.comments.findIndex((item) => item.id === idDelete);
 
     this._state.comments = [
@@ -262,6 +262,8 @@ export default class PopupFilmView extends AbstractStatefulView {
     this.updateElement({
       ...this._state
     });
+
+    this.element.scrollTop = scrollPosition;
   };
 
   _restoreHandlers = () => {

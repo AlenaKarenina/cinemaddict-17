@@ -37,6 +37,8 @@ export default class FilmPresenter {
     this.#filmComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
     this.#filmComponent.setFavoriteClickHandler(this.#onFavoriteClick);
 
+    this.#popupComponent.setAddCommentHandler(this.#onAddComment);
+
     this.#filmComponent.setClickHandler(this.#openPopup);
 
     if (prevFilmComponent === null) {
@@ -123,6 +125,14 @@ export default class FilmPresenter {
       UserAction.UPDATE_MOVIE,
       UpdateType.MINOR,
       {...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}},
+    );
+  };
+
+  #onAddComment = (update) => {
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.PATCH,
+      update
     );
   };
 }
