@@ -286,7 +286,7 @@ export default class PopupFilmView extends AbstractStatefulView {
     if (movie.commentEmoji && movie.commentInput) {
       const newComment = {
         ...generateComment(),
-        emotion: `./images/emoji/${movie.commentEmoji}.png`,
+        emotion: `${movie.commentEmoji}`,
         comment: movie.commentInput
       };
 
