@@ -5,6 +5,7 @@ import FilmsPresenter from './presenter/films-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import MovieModel from './model/movie-model.js';
 import FilterModel from './model/filter-model.js';
+import CommentsModel from './model/comments-model.js';
 
 const pageHeader = document.querySelector('.header');
 const pageMain = document.querySelector('.main');
@@ -12,7 +13,8 @@ const pageFooter = document.querySelector('.footer');
 
 const movieModel = new MovieModel();
 const filterModel = new FilterModel();
-const containerFilmsPresenter = new FilmsPresenter(pageMain, movieModel, filterModel);
+const commentsModel = new CommentsModel;
+const containerFilmsPresenter = new FilmsPresenter(pageMain, movieModel, filterModel, commentsModel);
 const filterPresenter = new FilterPresenter(pageMain, filterModel, movieModel);
 
 render(new ProfileView, pageHeader);

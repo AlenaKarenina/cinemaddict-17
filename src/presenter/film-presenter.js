@@ -51,6 +51,7 @@ export default class FilmPresenter {
     this.#filmComponent.setFavoriteClickHandler(this.#onFavoriteClick);
 
     this.#popupComponent.setAddCommentHandler(this.#onAddComment);
+    this.#popupComponent.setDeleteCommentHandler(this.#onDeleteComment);
 
     this.#filmComponent.setClickHandler(this.#openPopup);
 
@@ -77,6 +78,9 @@ export default class FilmPresenter {
     this.#popupComponent.setWatchlistClickHandler(this.#onWatchListClick);
     this.#popupComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
     this.#popupComponent.setFavoriteClickHandler(this.#onFavoriteClick);
+
+    this.#popupComponent.setAddCommentHandler(this.#onAddComment);
+    this.#popupComponent.setDeleteCommentHandler(this.#onDeleteComment);
   };
 
   destroy = () => {
@@ -138,6 +142,14 @@ export default class FilmPresenter {
       UserAction.UPDATE_MOVIE,
       UpdateType.MINOR,
       {...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}},
+    );
+  };
+
+  #onDeleteComment = (update) => {
+    this.#changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.PATCH,
+      update
     );
   };
 

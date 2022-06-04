@@ -6,6 +6,7 @@ import LoadMoreButtonView from '../view/load-more-button-view.js';
 import NoFilmCardView from '../view/no-film-card-view.js';
 import SortView from '../view/sort-view.js';
 import FilmPresenter from './film-presenter.js';
+import CommentsPresenter from './comments-presenter.js';
 import {sortFilmsByRating, sortFilmsByDate} from '../utils/task.js';
 import {filter} from '../utils/filter.js';
 
@@ -23,6 +24,7 @@ export default class FilmsPresenter {
   #renderedMovieCount = SHOW_FILM_COUNT_STEP;
 
   #filmPresenter = new Map();
+  #commentsPresenter = null;
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.ALL;
 
@@ -32,6 +34,8 @@ export default class FilmsPresenter {
     this.#filmListContainer = filmListContainer;
     this.#movieModel = movieModel;
     this.#filterModel = filterModel;
+
+    //this.#commentsPresenter = new CommentsPresenter(this.#commentsComponent.element, this.#handleViewAction);
 
     this.#movieModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -78,6 +82,12 @@ export default class FilmsPresenter {
     render(this.#noFilmComponent, this.#filmSection.element);
   };
 
+  createTask = (callback) => {
+    this.#currentSortType = SortType.DEFAULT;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+    this.#commentsPresenter.init(callback);
+  };
+
   #renderLoadMoreButton = () => {
     this.#loadMoreButtonComponent = new LoadMoreButtonView();
     this.#loadMoreButtonComponent.setClickLoadHandler(this.#handleLoadMoreButtonClick);
@@ -87,6 +97,8 @@ export default class FilmsPresenter {
 
   #clearFilm = ({resetRenderedMovieCount = false, resetSortType = false} = {}) => {
     const movieCount = this.movies.length;
+
+    //this.#commentsPresenter.destroy();
 
     this.#filmPresenter.forEach((presenter) => {
       if (presenter.isOpened) {
@@ -119,6 +131,7 @@ export default class FilmsPresenter {
   };
 
   #handleModeChange = () => {
+    //this.#commentsPresenter.destroy();
     this.#filmPresenter.forEach((presenter) => presenter.resetView());
   };
 
