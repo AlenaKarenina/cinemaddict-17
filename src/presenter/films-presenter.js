@@ -187,7 +187,7 @@ export default class FilmsPresenter {
     if (!this.#openedFilmPresenter.isOpened) {
       this.#openedFilmPresenter = null;
     }
-    const currentModalData = this.#movieModel.movies.find((movie) => movie.id === this.#openedFilmPresenter.movieId);
+    const currentModalData = this.#movieModel.movies.find((movie) => movie.id === this.#openedFilmPresenter?.movieId);
     if (currentModalData) {
       this.#openedFilmPresenter.init(currentModalData);
     }
@@ -202,11 +202,11 @@ export default class FilmsPresenter {
       return;
     }
 
-    this.#updateOpenedModal();
-
     this.#renderSort();
     render(this.#filmContainer, this.#filmSection.element);
     this.#renderFilmsList();
+
+    this.#updateOpenedModal();
 
     this.#renderFilms(movies.slice(0, Math.min(movieCount, this.#renderedMovieCount)));
 
