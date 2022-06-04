@@ -28,10 +28,6 @@ export default class FilmPresenter {
     return this.#mode === Mode.OPENED;
   }
 
-  get isClosed() {
-    return this.#mode === Mode.DEFAULT;
-  }
-
   get movieId() {
     return this.#movie.id;
   }
