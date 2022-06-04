@@ -24,6 +24,19 @@ export default class FilmPresenter {
     this.#changeMode = changeMode;
   }
 
+  get isOpened() {
+    return this.#mode === Mode.OPENED;
+  }
+
+  get movieId() {
+    return this.#movie.id;
+  }
+
+  //Добавим метод для частичной очистки компонента.  Иными словами, не уничтожаем модальное окно.
+  destroyOnlyCard = () => {
+    remove(this.#filmComponent);
+  };
+
   init = (movie) => {
     this.#movie = movie;
 

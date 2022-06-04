@@ -16,6 +16,7 @@ export default class FilmsPresenter {
   #loadMoreButtonComponent = null;
   #noFilmComponent = null;
   #sortComponent = null;
+  #openedFilmPresenter = null;
 
   #movieModel = null;
   #filmListContainer = null;
@@ -87,7 +88,15 @@ export default class FilmsPresenter {
   #clearFilm = ({resetRenderedMovieCount = false, resetSortType = false} = {}) => {
     const movieCount = this.movies.length;
 
-    this.#filmPresenter.forEach((presenter) => presenter.destroy());
+    this.#filmPresenter.forEach((presenter) => {
+      if (presenter.isOpened) {
+        presenter.destroyOnlyCard();
+        this.#openedFilmPresenter = presenter;
+      } else {
+        presenter.destroy();
+      }
+    });
+
     this.#filmPresenter.clear();
 
     remove(this.#sortComponent);
@@ -171,6 +180,19 @@ export default class FilmsPresenter {
     render(this.#filmSection, this.#filmListContainer);
   };
 
+  #updateOpenedModal = () => {
+    if (!this.#openedFilmPresenter) {
+      return;
+    }
+    if (!this.#openedFilmPresenter.isOpened) {
+      this.#openedFilmPresenter = null;
+    }
+    const currentModalData = this.#movieModel.movies.find((movie) => movie.id === this.#openedFilmPresenter.movieId);
+    if (currentModalData) {
+      this.#openedFilmPresenter.init(currentModalData);
+    }
+  };
+
   #renderMovie = () => {
     const movies = this.movies;
     const movieCount = movies.length;
@@ -179,6 +201,8 @@ export default class FilmsPresenter {
       this.#renderNoFilms();
       return;
     }
+
+    this.#updateOpenedModal();
 
     this.#renderSort();
     render(this.#filmContainer, this.#filmSection.element);
