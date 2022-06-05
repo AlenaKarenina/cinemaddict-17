@@ -1,4 +1,5 @@
 import Observable from '../framework/observable.js';
+import {UpdateType} from '../const.js';
 
 export default class MovieModel extends Observable {
   #filmsApiService = null;
@@ -33,6 +34,7 @@ export default class MovieModel extends Observable {
     } catch(err) {
       this.#movies = [];
     }
+    this._notify(UpdateType.INIT);
   };
 
   updateFilm = (updateType, update) => {
@@ -47,7 +49,6 @@ export default class MovieModel extends Observable {
       update,
       ...this.#movies.slice(index + 1),
     ];
-
     this._notify(updateType, update);
   };
 
