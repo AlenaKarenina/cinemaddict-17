@@ -37,19 +37,25 @@ export default class MovieModel extends Observable {
     this._notify(UpdateType.INIT);
   };
 
-  updateFilm = (updateType, update) => {
+  updateFilm = async (updateType, update) => {
     const index = this.#movies.findIndex((movie) => movie.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting movie');
     }
 
-    this.#movies = [
-      ...this.#movies.slice(0, index),
-      update,
-      ...this.#movies.slice(index + 1),
-    ];
-    this._notify(updateType, update);
+    try {
+      const response = await this.#filmsApiService.updateMovies(update);
+      const updatedFilm = this.#adaptToClient(response);
+      this.#movies = [
+        ...this.#movies.slice(0, index),
+        updatedFilm,
+        ...this.#movies.slice(index + 1),
+      ];
+      this._notify(updateType, updatedFilm);
+    } catch(err) {
+      throw new Error('Can\'t update movies');
+    }
   };
 
   #adaptToClient = (movie) => {
@@ -81,12 +87,10 @@ export default class MovieModel extends Observable {
     delete adaptedUserDetails.watching_date;
 
     const adaptedMovie = {...movie,
-      commentsIds: movie.comments,
       filmInfo: adaptedFilmInfo,
       userDetails: adaptedUserDetails,
     };
 
-    delete adaptedMovie.comments;
     delete adaptedMovie.film_info;
     delete adaptedMovie.user_details;
 

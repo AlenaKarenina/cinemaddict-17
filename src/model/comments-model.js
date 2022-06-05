@@ -1,15 +1,11 @@
 import Observable from '../framework/observable.js';
-import {COMMENT_COUNT} from '../const.js';
-import {generateComment} from '../mock/comments-template.js';
 
 export default class CommentsModel extends Observable {
-  #comments = Array.from({length: COMMENT_COUNT}, generateComment);
+  #comments = [];
 
   get comments() {
     return this.#comments;
   }
-
-  getCommentsById = (id) => this.#comments.filter((comment) => comment.id === id);
 
   addComment = (updateType, update) => {
     this.#comments = [

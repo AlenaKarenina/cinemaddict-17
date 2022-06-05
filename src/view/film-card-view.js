@@ -19,6 +19,9 @@ const createFilmCardTemplate = (movie) => {
     userDetails
   } = movie;
 
+  const GENRE_NUMBER = 0;
+  const genreDescription = genre[GENRE_NUMBER];
+
   const getControlClassName = (option) => option
     ? 'film-card__controls-item--active'
     : '';
@@ -31,7 +34,7 @@ const createFilmCardTemplate = (movie) => {
       <p class="film-card__info">
         <span class="film-card__year">${humanizeDueDate(date)}</span>
         <span class="film-card__duration">${humanizeDurationFormat(runtime)}</span>
-        <span class="film-card__genre">${genre}</span>
+        <span class="film-card__genre">${genreDescription}</span>
       </p>
       <img src="./${poster}" alt="${title}" class="film-card__poster">
       <p class="film-card__description">${description}</p>

@@ -1,7 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeFormatDate, humanizeDurationFormat} from '../utils/task.js';
 import {createComment} from './comment-popup-view.js';
-import {commentsEmotion, generateComment} from '../mock/comments-template.js';
+import {EMOJIS} from '../const.js';
 
 const createFilmDetailsPopupTemplate = (movie) => {
 
@@ -62,7 +62,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
   };
 
   const createEmojiListTemplate = (currentEmoji) => (
-    commentsEmotion.map((emoji) =>
+    EMOJIS.map((emoji) =>
       `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${currentEmoji === emoji ? 'checked' : ''}>
       <label class="film-details__emoji-label" for="emoji-${emoji}">
         <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
@@ -297,7 +297,6 @@ export default class PopupFilmView extends AbstractStatefulView {
 
     if (movie.commentEmoji && movie.commentInput) {
       const newComment = {
-        ...generateComment(),
         emotion: `${movie.commentEmoji}`,
         comment: movie.commentInput
       };

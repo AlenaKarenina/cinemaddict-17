@@ -52,12 +52,10 @@ export default class FilmsApiService extends ApiService {
     delete adaptedUserDetails.watchingDate;
 
     const adaptedMovie = {...movie,
-      comments: movie.commentsIds,
       'film_info': adaptedFilmInfo,
       'user_details': adaptedUserDetails,
     };
 
-    delete adaptedMovie.commentsIds;
     delete adaptedMovie.filmInfo;
     delete adaptedMovie.userDetails;
 

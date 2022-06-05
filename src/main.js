@@ -6,9 +6,7 @@ import FilterPresenter from './presenter/filter-presenter.js';
 import MovieModel from './model/movie-model.js';
 import FilterModel from './model/filter-model.js';
 import FilmsApiService from './films-api-service.js';
-
-const AUTHORIZATION = 'Basic hS8sfS13wgl7sa2i';
-const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
+import {AUTHORIZATION, END_POINT} from './const.js';
 
 const pageHeader = document.querySelector('.header');
 const pageMain = document.querySelector('.main');
@@ -19,10 +17,11 @@ const filterModel = new FilterModel();
 const containerFilmsPresenter = new FilmsPresenter(pageMain, movieModel, filterModel);
 const filterPresenter = new FilterPresenter(pageMain, filterModel, movieModel);
 
-render(new ProfileView, pageHeader);
-
-render(new FooterStatisticsView(movieModel.count), pageFooter);
-
 filterPresenter.init();
 containerFilmsPresenter.init();
-movieModel.init();
+
+movieModel.init()
+  .finally(() => {
+    render(new ProfileView, pageHeader);
+    render(new FooterStatisticsView(movieModel.count), pageFooter);
+  });
