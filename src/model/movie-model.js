@@ -1,11 +1,9 @@
 import Observable from '../framework/observable.js';
-import {CARD_COUNT} from '../const.js';
-import {genetateMovieCard} from '../mock/movie-template.js';
 
 export default class MovieModel extends Observable {
   #filmsApiService = null;
 
-  #movies = Array.from({length: CARD_COUNT}, genetateMovieCard);
+  #movies = [];
 
   constructor(filmsApiService) {
     super();
@@ -27,6 +25,15 @@ export default class MovieModel extends Observable {
   get count() {
     return this.#movies.length;
   }
+
+  init = async () => {
+    try {
+      const movies = await this.#filmsApiService.movies;
+      this.#movies = movies.map(this.#adaptToClient);
+    } catch(err) {
+      this.#movies = [];
+    }
+  };
 
   updateFilm = (updateType, update) => {
     const index = this.#movies.findIndex((movie) => movie.id === update.id);
