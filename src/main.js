@@ -13,6 +13,7 @@ const pageMain = document.querySelector('.main');
 const pageFooter = document.querySelector('.footer');
 
 const movieModel = new MovieModel(new FilmsApiService(END_POINT, AUTHORIZATION));
+
 const filterModel = new FilterModel();
 const containerFilmsPresenter = new FilmsPresenter(pageMain, movieModel, filterModel);
 const filterPresenter = new FilterPresenter(pageMain, filterModel, movieModel);
@@ -20,8 +21,9 @@ const filterPresenter = new FilterPresenter(pageMain, filterModel, movieModel);
 filterPresenter.init();
 containerFilmsPresenter.init();
 
+render(new ProfileView, pageHeader);
+
 movieModel.init()
   .finally(() => {
-    render(new ProfileView, pageHeader);
     render(new FooterStatisticsView(movieModel.count), pageFooter);
   });

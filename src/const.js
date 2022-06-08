@@ -40,4 +40,9 @@ const EMOJIS = [
 const AUTHORIZATION = 'Basic hS8sfS13wgl7sa2i';
 const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
 
-export {CARD_COUNT, COMMENT_COUNT, FilterType, SHOW_FILM_COUNT_STEP, SortType, UserAction, UpdateType, AUTHORIZATION, END_POINT, EMOJIS};
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+};
+
+export {CARD_COUNT, COMMENT_COUNT, FilterType, SHOW_FILM_COUNT_STEP, SortType, UserAction, UpdateType, AUTHORIZATION, END_POINT, EMOJIS, Method};

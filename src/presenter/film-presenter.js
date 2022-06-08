@@ -1,7 +1,9 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupFilmView from '../view/popup-film-view.js';
-import {UserAction, UpdateType} from '../const.js';
+import {UserAction, UpdateType, END_POINT, AUTHORIZATION} from '../const.js';
+import CommentsApiService from '../comments-api-service.js';
+import CommentsModel from '../model/comments-model.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -18,10 +20,13 @@ export default class FilmPresenter {
   #movie = null;
   #mode = Mode.DEFAULT;
 
+  #commentsModel = null;
+
   constructor(filmListContainer, changeData, changeMode) {
     this.#filmListContainer = filmListContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
+    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
   }
 
   get isOpened() {
@@ -32,7 +37,6 @@ export default class FilmPresenter {
     return this.#movie.id;
   }
 
-  //Добавим метод для частичной очистки компонента.  Иными словами, не уничтожаем модальное окно.
   destroyOnlyCard = () => {
     remove(this.#filmComponent);
   };
@@ -53,6 +57,8 @@ export default class FilmPresenter {
     this.#popupComponent.setAddCommentHandler(this.#onAddComment);
 
     this.#filmComponent.setClickHandler(this.#openPopup);
+
+    this.#commentsModel.init(this.#movie.id);
 
     if (prevFilmComponent === null) {
       render(this.#filmComponent, this.#filmListContainer);
@@ -91,7 +97,7 @@ export default class FilmPresenter {
     }
   };
 
-  #openPopup = () => {
+  #openPopup = async () => {
     render(this.#popupComponent, document.body);
     document.addEventListener('keydown', this.#onEscKeyDown);
 
