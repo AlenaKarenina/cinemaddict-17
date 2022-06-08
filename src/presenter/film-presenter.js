@@ -26,7 +26,6 @@ export default class FilmPresenter {
     this.#filmListContainer = filmListContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
-    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
   }
 
   get isOpened() {
@@ -57,8 +56,6 @@ export default class FilmPresenter {
     this.#popupComponent.setAddCommentHandler(this.#onAddComment);
 
     this.#filmComponent.setClickHandler(this.#openPopup);
-
-    this.#commentsModel.init(this.#movie.id);
 
     if (prevFilmComponent === null) {
       render(this.#filmComponent, this.#filmListContainer);
@@ -98,6 +95,11 @@ export default class FilmPresenter {
   };
 
   #openPopup = async () => {
+    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
+    await this.#commentsModel.init(this.#movie.id);
+    const comments = this.#commentsModel.comments;
+    this.#popupComponent = new PopupFilmView({...this.#movie, comments});
+
     render(this.#popupComponent, document.body);
     document.addEventListener('keydown', this.#onEscKeyDown);
 
