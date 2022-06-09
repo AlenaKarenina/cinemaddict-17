@@ -20,7 +20,8 @@ const SHOW_FILM_COUNT_STEP = 5;
 const UserAction = {
   UPDATE_MOVIE: 'UPDATE_MOVIE',
   ADD_COMMENT: 'ADD_COMMENT',
-  DELETE_COMMENT: 'DELETE_COMMENT'
+  DELETE_COMMENT: 'DELETE_COMMENT',
+  INIT: 'INIT',
 };
 
 const UpdateType = {
@@ -29,4 +30,19 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {CARD_COUNT, COMMENT_COUNT, FilterType, SHOW_FILM_COUNT_STEP, SortType, UserAction, UpdateType};
+const EMOJIS = [
+  'smile',
+  'sleeping',
+  'puke',
+  'angry'
+];
+
+const AUTHORIZATION = 'Basic hS8sfS13wgl7sa2i';
+const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
+
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+};
+
+export {CARD_COUNT, COMMENT_COUNT, FilterType, SHOW_FILM_COUNT_STEP, SortType, UserAction, UpdateType, AUTHORIZATION, END_POINT, EMOJIS, Method};

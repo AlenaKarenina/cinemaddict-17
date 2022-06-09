@@ -1,15 +1,32 @@
 import Observable from '../framework/observable.js';
-import {COMMENT_COUNT} from '../const.js';
-import {generateComment} from '../mock/comments-template.js';
+import {UpdateType} from '../const.js';
 
 export default class CommentsModel extends Observable {
-  #comments = Array.from({length: COMMENT_COUNT}, generateComment);
+
+  #commentsApiService = null;
+  #movieId = null;
+  #comments = null;
+
+  constructor(commentsApiService) {
+    super();
+    this.#commentsApiService = commentsApiService;
+  }
 
   get comments() {
     return this.#comments;
   }
 
-  getCommentsById = (id) => this.#comments.filter((comment) => comment.id === id);
+  init = async (movieId) => {
+    this.#movieId = movieId;
+
+    try {
+      this.#comments = await this.#commentsApiService.getComments(this.#movieId);
+    } catch(err) {
+      this.#comments = [];
+    }
+
+    this._notify(UpdateType.INIT);
+  };
 
   addComment = (updateType, update) => {
     this.#comments = [
