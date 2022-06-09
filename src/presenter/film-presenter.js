@@ -47,7 +47,7 @@ export default class FilmPresenter {
     const prevPopupComponent = this.#popupComponent;
 
     this.#filmComponent = new FilmCardView(movie);
-    this.#popupComponent = new PopupFilmView(movie);
+    this.#popupComponent = new PopupFilmView({...movie, comments: this.#commentsModel?.comments || []});
 
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchListClick);
     this.#filmComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
