@@ -108,7 +108,6 @@ export default class FilmsPresenter {
 
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
-    remove(this.#noFilmComponent);
     remove(this.#loadMoreButtonComponent);
 
     if (this.#noFilmComponent) {
@@ -208,6 +207,7 @@ export default class FilmsPresenter {
 
   #renderMovie = () => {
     render(this.#filmContainer, this.#filmSection.element);
+    this.#renderFilmsList();
 
     if (this.#isLoading) {
       this.#renderLoading();
@@ -223,7 +223,6 @@ export default class FilmsPresenter {
     }
 
     this.#renderSort();
-    this.#renderFilmsList();
     this.#updateOpenedModal();
 
     this.#renderFilms(movies.slice(0, Math.min(movieCount, this.#renderedMovieCount)));

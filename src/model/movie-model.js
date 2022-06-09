@@ -9,10 +9,6 @@ export default class MovieModel extends Observable {
   constructor(filmsApiService) {
     super();
     this.#filmsApiService = filmsApiService;
-
-    this.#filmsApiService.movies.then((movies) => {
-      console.log(movies.map(this.#adaptToClient));
-    });
   }
 
   get movies() {
