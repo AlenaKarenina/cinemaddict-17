@@ -1,4 +1,4 @@
-import {render, remove} from '../framework/render.js';
+import {render, RenderPosition, remove} from '../framework/render.js';
 import {SHOW_FILM_COUNT_STEP, SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import FilmSectionView from '../view/film-section-view.js';
 import FilmContainerView from '../view/film-container-view.js';
@@ -185,11 +185,7 @@ export default class FilmsPresenter {
     this.#sortComponent = new SortView(this.#currentSortType);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
 
-    render(this.#sortComponent, this.#filmListContainer);
-  };
-
-  #renderFilmsList = () => {
-    render(this.#filmSection, this.#filmListContainer);
+    render(this.#sortComponent, this.#filmSection.element, RenderPosition.AFTERBEGIN);
   };
 
   #updateOpenedModal = () => {
@@ -206,8 +202,7 @@ export default class FilmsPresenter {
   };
 
   #renderMovie = () => {
-    render(this.#filmContainer, this.#filmSection.element);
-    this.#renderFilmsList();
+    render(this.#filmSection, this.#filmListContainer);
 
     if (this.#isLoading) {
       this.#renderLoading();
@@ -223,6 +218,7 @@ export default class FilmsPresenter {
     }
 
     this.#renderSort();
+    render(this.#filmContainer, this.#filmSection.element);
     this.#updateOpenedModal();
 
     this.#renderFilms(movies.slice(0, Math.min(movieCount, this.#renderedMovieCount)));
