@@ -3,7 +3,7 @@ import {humanizeCommentDateTime} from '../utils/task.js';
 import he from 'he';
 
 const createComment = (comments) => {
-  const {comment, date, emotion, author, id} = comments;
+  const {comment, date, emotion, author, id, isDeleting, isDisabled} = comments;
 
   return (`
   <li class="film-details__comment">
@@ -15,7 +15,9 @@ const createComment = (comments) => {
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${humanizeCommentDateTime(date)}</span>
-        <button class="film-details__comment-delete" data-button-id="${id}">Delete</button>
+        <button class="film-details__comment-delete" data-button-id="${id}" ${isDisabled ? 'disabled' : ''}>
+          ${isDeleting ? 'Deleting...' : 'Delete'}
+        </button>
       </p>
     </div>
   </li>`);
