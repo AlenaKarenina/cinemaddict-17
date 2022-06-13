@@ -30,11 +30,13 @@ export default class FilmsPresenter {
   #isLoading = true;
 
   #filterModel = null;
+  #commentsModel = null;
 
-  constructor(filmListContainer, movieModel, filterModel) {
+  constructor(filmListContainer, movieModel, filterModel, commentsModel) {
     this.#filmListContainer = filmListContainer;
     this.#movieModel = movieModel;
     this.#filterModel = filterModel;
+    this.#commentsModel = commentsModel;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -129,19 +131,31 @@ export default class FilmsPresenter {
     this.#filmPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
         this.#filmPresenter.get(update.id).setSaving();
-        this.#movieModel.updateFilm(updateType, update);
+        try {
+          await this.#movieModel.updateFilm(updateType, update);
+        } catch(err) {
+          this.#filmPresenter.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_COMMENT:
         this.#filmPresenter.setSaving();
-        this.#movieModel.updateFilm(updateType, update);
+        try {
+          await this.#commentsModel.addComment(updateType, update);
+        } catch(err) {
+          this.#filmPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_COMMENT:
         this.#filmPresenter.get(update.id).setDeleting();
-        this.#movieModel.updateFilm(updateType, update);
+        try {
+          await this.#commentsModel.deleteComment(updateType, update);
+        } catch(err) {
+          this.#filmPresenter.get(update.id).setAborting();
+        }
         break;
     }
   };

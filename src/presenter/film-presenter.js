@@ -113,6 +113,23 @@ export default class FilmPresenter {
     }
   };
 
+  setAborting = () => {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#popupComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#popupComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#popupComponent.shake(resetFormState);
+  };
+
   #openPopup = async () => {
     this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
     await this.#commentsModel.init(this.#movie.id);
