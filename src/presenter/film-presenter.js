@@ -95,6 +95,24 @@ export default class FilmPresenter {
     }
   };
 
+  setSaving = () => {
+    if (this.#mode === Mode.OPENED) {
+      this.#popupComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
+  setDeleting = () => {
+    if (this.#mode === Mode.OPENED) {
+      this.#popupComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
   #openPopup = async () => {
     this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
     await this.#commentsModel.init(this.#movie.id);
