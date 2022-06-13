@@ -53,7 +53,8 @@ export default class FilmPresenter {
     this.#filmComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
     this.#filmComponent.setFavoriteClickHandler(this.#onFavoriteClick);
 
-    this.#popupComponent.setAddCommentHandler(this.#onAddComment);
+    this.#popupComponent.setAddCommentHandler(this.#handleAddComment);
+    this.#popupComponent.setDeleteCommentHandler(this.#handleDeleteComment);
 
     this.#filmComponent.setClickHandler(this.#openPopup);
 
@@ -149,11 +150,23 @@ export default class FilmPresenter {
     );
   };
 
-  #onAddComment = (update) => {
-    this.#changeData(
+  #handleAddComment = async (movie, comment) => {
+
+    await this.#commentsModel.addComment(
       UserAction.ADD_COMMENT,
       UpdateType.PATCH,
-      update
+      comment, movie
     );
   };
+
+  #handleDeleteComment = async (movie, comments, id) => {
+    const comment = comments.find((item) => String(item.id) === id);
+
+    await this.#commentsModel.deleteComment(
+      UserAction.DELETE_COMMENT,
+      UpdateType.PATCH,
+      comment, movie
+    );
+  };
+
 }

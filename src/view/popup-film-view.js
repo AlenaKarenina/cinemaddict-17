@@ -51,13 +51,15 @@ const createFilmDetailsPopupTemplate = (movie) => {
 
   const createEmotion = (emoji) => `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
 
-  const createAddCommentTemplate = (emoji, comment) => {
+  const createAddCommentTemplate = (emoji, comment, isDisabled) => {
     const emojiImg = emoji ? createEmotion(emoji) : '';
     const newComment = comment ? comment : '';
 
     return `<div class="film-details__add-emoji-label">${emojiImg}</div>
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newComment}</textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isDisabled ? 'disabled' : ''}>
+          ${newComment}
+        </textarea>
       </label>`;
   };
 
@@ -158,8 +160,6 @@ export default class PopupFilmView extends AbstractStatefulView {
     this._state = PopupFilmView.parseCommentToState(movie);
 
     this.#setInnerHandlers();
-
-    this.setDeleteCommentHandler();
   }
 
   get template() {
@@ -247,7 +247,7 @@ export default class PopupFilmView extends AbstractStatefulView {
   #onAddComment = (evt) => {
     if (evt.ctrlKey && evt.key === 'Enter') {
       evt.preventDefault();
-      this._callback.addComment(PopupFilmView.parseStateToComment(this._state));
+      this._callback.addComment(PopupFilmView.parseStateToComment(this._state), PopupFilmView.newComment(this._state));
     }
   };
 
@@ -264,7 +264,8 @@ export default class PopupFilmView extends AbstractStatefulView {
     evt.preventDefault();
     const scrollPosition = this.element.scrollTop;
     const isDeleteButton = evt.target.dataset.buttonId;
-    const index = this._state.comments.findIndex((item) => item.id === isDeleteButton);
+
+    /*const index = this._state.comments.findIndex((item) => item.id === isDeleteButton);
 
     this._state.comments = [
       ...this._state.comments.slice(0, index),
@@ -273,8 +274,9 @@ export default class PopupFilmView extends AbstractStatefulView {
 
     this.updateElement({
       ...this._state
-    });
+    });*/
 
+    this._callback.deleteComment(PopupFilmView.parseStateToComment(this._state), this._state.comments, isDeleteButton);
     this.element.scrollTop = scrollPosition;
   };
 
@@ -302,6 +304,22 @@ export default class PopupFilmView extends AbstractStatefulView {
   static parseStateToComment = (state) => {
     const movie = { ...state };
 
+    delete movie.commentEmoji;
+    delete movie.commentInput;
+    delete movie.isDeleting;
+    delete movie.isDisabled;
+
+    return movie;
+  };
+
+  static newComment = (state) => ({
+    emotion: state.commentEmoji,
+    comment: state.commentInput,
+  });
+
+  /*static parseStateToComment = (state) => {
+    const movie = { ...state };
+
     if (movie.commentEmoji && movie.commentInput) {
       const newComment = {
         emotion: `${movie.commentEmoji}`,
@@ -317,5 +335,5 @@ export default class PopupFilmView extends AbstractStatefulView {
     delete movie.isDisabled;
 
     return movie;
-  };
+  };*/
 }

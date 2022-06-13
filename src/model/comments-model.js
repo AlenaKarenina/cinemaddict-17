@@ -30,7 +30,7 @@ export default class CommentsModel extends Observable {
 
   addComment = async (updateType, update, movie) => {
     try {
-      await this.#commentsApiService.addComment(update, movie.id);
+      await this.#commentsApiService.addComment(update);
 
       this._notify(updateType, movie);
     } catch(err) {
