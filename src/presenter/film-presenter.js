@@ -198,22 +198,18 @@ export default class FilmPresenter {
     );
   };
 
-  #handleAddComment = async (newComment, movie) => {
-
+  #handleAddComment = async (movie, newComment) => {
     await this.#commentsModel.addComment(
       UpdateType.PATCH,
       newComment,
       movie
     );
-
   };
 
-  #handleDeleteComment = async (comment, movie) => {
-
+  #handleDeleteComment = async (id) => {
     await this.#commentsModel.deleteComment(
       UpdateType.PATCH,
-      comment,
-      movie
+      id
     );
   };
 
