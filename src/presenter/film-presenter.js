@@ -53,9 +53,6 @@ export default class FilmPresenter {
     this.#filmComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
     this.#filmComponent.setFavoriteClickHandler(this.#onFavoriteClick);
 
-    this.#popupComponent.setAddCommentHandler(this.#handleAddComment);
-    this.#popupComponent.setDeleteCommentHandler(this.#handleDeleteComment);
-
     this.#filmComponent.setClickHandler(this.#openPopup);
 
     if (prevFilmComponent === null) {
@@ -81,6 +78,9 @@ export default class FilmPresenter {
     this.#popupComponent.setWatchlistClickHandler(this.#onWatchListClick);
     this.#popupComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
     this.#popupComponent.setFavoriteClickHandler(this.#onFavoriteClick);
+
+    this.#popupComponent.setAddCommentHandler(this.#handleAddComment);
+    this.#popupComponent.setDeleteCommentHandler(this.#handleDeleteComment);
   };
 
   destroy = () => {
@@ -122,7 +122,6 @@ export default class FilmPresenter {
     const resetFormState = () => {
       this.#popupComponent.updateElement({
         isDisabled: false,
-        isSaving: false,
         isDeleting: false,
       });
     };
@@ -161,6 +160,20 @@ export default class FilmPresenter {
     }
   };
 
+
+  #handleViewAction = async (actionType, updateType, update) => {
+    switch (actionType) {
+      case UserAction.ADD_COMMENT:
+        await this.#commentsModel.deleteComment(updateType, update);
+
+        break;
+      case UserAction.DELETE_COMMENT:
+        await this.#commentsModel.addComment(updateType, update, this.movieId);
+
+        break;
+    }
+  };
+
   #onWatchListClick = () => {
     this.#changeData(
       UserAction.UPDATE_MOVIE,
@@ -185,22 +198,23 @@ export default class FilmPresenter {
     );
   };
 
-  #handleAddComment = async (movie, comment) => {
+  #handleAddComment = async (newComment, movie) => {
 
     await this.#commentsModel.addComment(
-      UserAction.ADD_COMMENT,
       UpdateType.PATCH,
-      comment, movie
+      newComment,
+      movie
     );
+
   };
 
-  #handleDeleteComment = async (movie, comments, id) => {
+  #handleDeleteComment = async (comments, id, movie) => {
     const comment = comments.find((item) => String(item.id) === id);
 
     await this.#commentsModel.deleteComment(
-      UserAction.DELETE_COMMENT,
       UpdateType.PATCH,
-      comment, movie
+      comment,
+      movie
     );
   };
 

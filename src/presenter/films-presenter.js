@@ -141,7 +141,7 @@ export default class FilmsPresenter {
           this.#filmPresenter.get(update.id).setAborting();
         }
         break;
-      case UserAction.ADD_COMMENT:
+      /*case UserAction.ADD_COMMENT:
         this.#filmPresenter.setSaving();
         try {
           await this.#commentsModel.addComment(updateType, update);
@@ -156,7 +156,7 @@ export default class FilmsPresenter {
         } catch(err) {
           this.#filmPresenter.get(update.id).setAborting();
         }
-        break;
+        break;*/
     }
   };
 

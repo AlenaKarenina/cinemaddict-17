@@ -266,12 +266,10 @@ export default class PopupFilmView extends AbstractStatefulView {
     const isDeleteButton = evt.target.dataset.buttonId;
 
     /*const index = this._state.comments.findIndex((item) => item.id === isDeleteButton);
-
     this._state.comments = [
       ...this._state.comments.slice(0, index),
       ...this._state.comments.slice(index + 1),
     ];
-
     this.updateElement({
       ...this._state
     });*/
@@ -319,21 +317,17 @@ export default class PopupFilmView extends AbstractStatefulView {
 
   /*static parseStateToComment = (state) => {
     const movie = { ...state };
-
     if (movie.commentEmoji && movie.commentInput) {
       const newComment = {
         emotion: `${movie.commentEmoji}`,
         comment: movie.commentInput
       };
-
       movie.comments = [...movie.comments, newComment];
     }
-
     delete movie.commentEmoji;
     delete movie.commentInput;
     delete movie.isDeleting;
     delete movie.isDisabled;
-
     return movie;
   };*/
 }

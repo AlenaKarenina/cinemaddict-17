@@ -1,5 +1,6 @@
 import Observable from '../framework/observable.js';
 import {UpdateType} from '../const.js';
+import MovieModel from './movie-model.js';
 
 export default class CommentsModel extends Observable {
 
@@ -30,7 +31,7 @@ export default class CommentsModel extends Observable {
 
   addComment = async (updateType, update, movie) => {
     try {
-      await this.#commentsApiService.addComment(update);
+      await this.#commentsApiService.addComment(update, movie.id);
 
       this._notify(updateType, movie);
     } catch(err) {
@@ -53,4 +54,5 @@ export default class CommentsModel extends Observable {
       throw new Error('Can\'t delete comment');
     }
   };
+
 }
