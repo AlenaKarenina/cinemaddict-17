@@ -265,14 +265,14 @@ export default class PopupFilmView extends AbstractStatefulView {
     const scrollPosition = this.element.scrollTop;
     const isDeleteButton = evt.target.dataset.buttonId;
 
-    /*const index = this._state.comments.findIndex((item) => item.id === isDeleteButton);
+    const index = this._state.comments.findIndex((item) => item.id === isDeleteButton);
     this._state.comments = [
       ...this._state.comments.slice(0, index),
       ...this._state.comments.slice(index + 1),
     ];
     this.updateElement({
       ...this._state
-    });*/
+    });
 
     this._callback.deleteComment(PopupFilmView.parseStateToComment(this._state), this._state.comments, isDeleteButton);
     this.element.scrollTop = scrollPosition;

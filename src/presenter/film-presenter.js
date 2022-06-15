@@ -208,8 +208,7 @@ export default class FilmPresenter {
 
   };
 
-  #handleDeleteComment = async (comments, id, movie) => {
-    const comment = comments.find((item) => String(item.id) === id);
+  #handleDeleteComment = async (comment, movie) => {
 
     await this.#commentsModel.deleteComment(
       UpdateType.PATCH,
