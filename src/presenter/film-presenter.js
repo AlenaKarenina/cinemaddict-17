@@ -96,21 +96,15 @@ export default class FilmPresenter {
   };
 
   setSaving = () => {
-    if (this.#mode === Mode.OPENED) {
-      this.#popupComponent.updateElement({
-        isDisabled: true,
-        isDeleting: true,
-      });
-    }
+    this.#popupComponent.updateElement({
+      isSaving: true,
+    });
   };
 
   setDeleting = () => {
-    if (this.#mode === Mode.OPENED) {
-      this.#popupComponent.updateElement({
-        isDisabled: true,
-        isDeleting: true,
-      });
-    }
+    this.#popupComponent.updateElement({
+      isDeleting: true,
+    });
   };
 
   setAborting = () => {
@@ -123,11 +117,18 @@ export default class FilmPresenter {
       this.#popupComponent.updateElement({
         isDisabled: false,
         isDeleting: false,
+        isSaving: true,
       });
     };
 
     this.#popupComponent.shake(resetFormState);
   };
+
+  /*shakeComment = (callback) => () => {
+    this.#popupComponent.shake
+      .call({
+        element: this.#popupComponent.element.querySelector('.film-details__new-comment')}, callback);
+  };*/
 
   #openPopup = async () => {
     this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
@@ -160,20 +161,6 @@ export default class FilmPresenter {
     }
   };
 
-
-  #handleViewAction = async (actionType, updateType, update) => {
-    switch (actionType) {
-      case UserAction.ADD_COMMENT:
-        await this.#commentsModel.deleteComment(updateType, update);
-
-        break;
-      case UserAction.DELETE_COMMENT:
-        await this.#commentsModel.addComment(updateType, update, this.movieId);
-
-        break;
-    }
-  };
-
   #onWatchListClick = () => {
     this.#changeData(
       UserAction.UPDATE_MOVIE,
@@ -198,19 +185,38 @@ export default class FilmPresenter {
     );
   };
 
-  #handleAddComment = async (movie, newComment) => {
-    await this.#commentsModel.addComment(
-      UpdateType.PATCH,
-      newComment,
-      movie
+  /*#handleAddComment = async (movie, newComment) => {
+    await this.#commentsModel.addComment(UpdateType.PATCH, newComment, movie);
+  };*/
+
+  #handleAddComment = (update) => {
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.MINOR,
+      update,
+      this.setSaving,
     );
   };
 
-  #handleDeleteComment = async (id) => {
-    await this.#commentsModel.deleteComment(
-      UpdateType.PATCH,
-      id
+  /*#handleDeleteComment = async (id) => {
+    await this.#commentsModel.deleteComment(UpdateType.PATCH, id);
+  };*/
+
+  #handleDeleteComment = (update) => {
+    this.#changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.MINOR,
+      update,
+      this.setDeleting,
     );
+  };
+
+  resetFilmState = () => {
+    this.#popupComponent.updateElement({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
   };
 
 }

@@ -51,13 +51,13 @@ const createFilmDetailsPopupTemplate = (movie) => {
 
   const createEmotion = (emoji) => `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
 
-  const createAddCommentTemplate = (emoji, comment, isDisabled) => {
+  const createAddCommentTemplate = (emoji, comment, isSaving) => {
     const emojiImg = emoji ? createEmotion(emoji) : '';
     const newComment = comment ? comment : '';
 
     return `<div class="film-details__add-emoji-label">${emojiImg}</div>
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isDisabled ? 'disabled' : ''}>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isSaving ? 'disabled' : ''}>
           ${newComment}
         </textarea>
       </label>`;
@@ -160,6 +160,8 @@ export default class PopupFilmView extends AbstractStatefulView {
     this._state = PopupFilmView.parseCommentToState(movie);
 
     this.#setInnerHandlers();
+
+    this.setDeleteCommentHandler();
   }
 
   get template() {
@@ -295,6 +297,7 @@ export default class PopupFilmView extends AbstractStatefulView {
       commentInput: null,
       isDisabled: false,
       isDeleting: false,
+      isSaving: false,
     }
   );
 
@@ -305,6 +308,7 @@ export default class PopupFilmView extends AbstractStatefulView {
     delete movie.commentInput;
     delete movie.isDeleting;
     delete movie.isDisabled;
+    delete movie.isSaving;
 
     return movie;
   };

@@ -1,5 +1,5 @@
 import {render, RenderPosition, remove} from '../framework/render.js';
-import {SHOW_FILM_COUNT_STEP, SortType, UpdateType, UserAction, FilterType} from '../const.js';
+import {SHOW_FILM_COUNT_STEP, SortType, UpdateType, UserAction, FilterType, TimeLimit} from '../const.js';
 import FilmSectionView from '../view/film-section-view.js';
 import FilmContainerView from '../view/film-container-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
@@ -9,6 +9,7 @@ import LoadingView from '../view/loading-view.js';
 import FilmPresenter from './film-presenter.js';
 import {sortFilmsByRating, sortFilmsByDate} from '../utils/task.js';
 import {filter} from '../utils/filter.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class FilmsPresenter {
 
@@ -31,6 +32,8 @@ export default class FilmsPresenter {
 
   #filterModel = null;
   #commentsModel = null;
+
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
   constructor(filmListContainer, movieModel, filterModel, commentsModel) {
     this.#filmListContainer = filmListContainer;
@@ -131,33 +134,42 @@ export default class FilmsPresenter {
     this.#filmPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = async (actionType, updateType, update) => {
+  #handleViewAction = async (
+    actionType,
+    updateType,
+    update,
+    setFeedback = () => {},
+    setAborting = () => {}) => {
+
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
-        this.#filmPresenter.get(update.id).setSaving();
         try {
           await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
-          this.#filmPresenter.get(update.id).setAborting();
+          setAborting();
         }
         break;
-      /*case UserAction.ADD_COMMENT:
-        this.#filmPresenter.setSaving();
+      case UserAction.ADD_COMMENT:
         try {
+          setFeedback();
           await this.#commentsModel.addComment(updateType, update);
         } catch(err) {
-          this.#filmPresenter.setAborting();
+          setAborting();
         }
         break;
       case UserAction.DELETE_COMMENT:
-        this.#filmPresenter.get(update.id).setDeleting();
         try {
+          setFeedback();
           await this.#commentsModel.deleteComment(updateType, update);
         } catch(err) {
-          this.#filmPresenter.get(update.id).setAborting();
+          setAborting();
         }
-        break;*/
+        break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -182,7 +194,12 @@ export default class FilmsPresenter {
   };
 
   #createFilm = (movie) => {
-    const filmPresenter = new FilmPresenter(this.#filmContainer.element, this.#handleViewAction, this.#handleModeChange);
+    const filmPresenter = new FilmPresenter(
+      this.#filmContainer.element,
+      this.#handleViewAction,
+      this.#handleModeChange,
+      this.#commentsModel
+    );
     filmPresenter.init(movie);
     this.#filmPresenter.set(movie.id, filmPresenter);
   };
