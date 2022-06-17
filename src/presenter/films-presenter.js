@@ -134,10 +134,7 @@ export default class FilmsPresenter {
     this.#filmPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = async (
-    actionType,
-    updateType,
-    update) => {
+  #handleViewAction = async (actionType, updateType, update, comment) => {
 
     this.#uiBlocker.block();
 
@@ -153,7 +150,8 @@ export default class FilmsPresenter {
       case UserAction.ADD_COMMENT:
         this.#filmPresenter.setSaving();
         try {
-          await this.#commentsModel.addComment(updateType, update);
+          await this.#commentsModel.addComment(updateType, comment, update.id);
+          await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
           this.#filmPresenter.setAborting();
         }
@@ -161,7 +159,8 @@ export default class FilmsPresenter {
       case UserAction.DELETE_COMMENT:
         this.#filmPresenter.get(update.id).setDeleting();
         try {
-          await this.#commentsModel.deleteComment(updateType, update);
+          await this.#commentsModel.deleteComment(updateType, comment);
+          await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
           this.#filmPresenter.get(update.id).setAborting();
         }
