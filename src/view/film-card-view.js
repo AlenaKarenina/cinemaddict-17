@@ -21,6 +21,15 @@ const createFilmCardTemplate = (movie) => {
 
   const GENRE_NUMBER = 0;
   const genreDescription = genre[GENRE_NUMBER];
+  const MAX_DESCRIPTION = 140;
+
+  const cutShort = (string, maxLength) => (
+    string.length > maxLength
+      ? `${string.substr(0, maxLength - 1)}${'&hellip;'}`
+      : string
+  );
+
+  const descriptionCut = cutShort(description, MAX_DESCRIPTION);
 
   const getControlClassName = (option) => option
     ? 'film-card__controls-item--active'
@@ -37,7 +46,7 @@ const createFilmCardTemplate = (movie) => {
         <span class="film-card__genre">${genreDescription}</span>
       </p>
       <img src="./${poster}" alt="${title}" class="film-card__poster">
-      <p class="film-card__description">${description}</p>
+      <p class="film-card__description">${descriptionCut}</p>
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">
