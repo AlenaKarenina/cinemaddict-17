@@ -185,31 +185,31 @@ export default class FilmPresenter {
     );
   };
 
-  /*#handleAddComment = async (movie, newComment) => {
+  #handleAddComment = async (movie, newComment) => {
     await this.#commentsModel.addComment(UpdateType.PATCH, newComment, movie);
-  };*/
+  };
 
-  #handleAddComment = (update) => {
+  /*#handleAddComment = (update) => {
     this.#changeData(
       UserAction.ADD_COMMENT,
       UpdateType.MINOR,
       update,
       this.setSaving,
     );
-  };
-
-  /*#handleDeleteComment = async (id) => {
-    await this.#commentsModel.deleteComment(UpdateType.PATCH, id);
   };*/
 
-  #handleDeleteComment = (update) => {
+  #handleDeleteComment = async (id) => {
+    await this.#commentsModel.deleteComment(UpdateType.PATCH, id);
+  };
+
+  /*#handleDeleteComment = (update) => {
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
       update,
       this.setDeleting,
     );
-  };
+  };*/
 
   resetFilmState = () => {
     this.#popupComponent.updateElement({

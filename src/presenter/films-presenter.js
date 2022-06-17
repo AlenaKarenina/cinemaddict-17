@@ -137,34 +137,33 @@ export default class FilmsPresenter {
   #handleViewAction = async (
     actionType,
     updateType,
-    update,
-    setFeedback = () => {},
-    setAborting = () => {}) => {
+    update) => {
 
     this.#uiBlocker.block();
 
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
+        this.#filmPresenter.get(update.id).setSaving();
         try {
           await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
-          setAborting();
+          this.#filmPresenter.get(update.id).setAborting();
         }
         break;
       case UserAction.ADD_COMMENT:
+        this.#filmPresenter.setSaving();
         try {
-          setFeedback();
           await this.#commentsModel.addComment(updateType, update);
         } catch(err) {
-          setAborting();
+          this.#filmPresenter.setAborting();
         }
         break;
       case UserAction.DELETE_COMMENT:
+        this.#filmPresenter.get(update.id).setDeleting();
         try {
-          setFeedback();
           await this.#commentsModel.deleteComment(updateType, update);
         } catch(err) {
-          setAborting();
+          this.#filmPresenter.get(update.id).setAborting();
         }
         break;
     }
