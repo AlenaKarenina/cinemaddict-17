@@ -160,8 +160,6 @@ export default class PopupFilmView extends AbstractStatefulView {
     this._state = PopupFilmView.parseCommentToState(movie);
 
     this.#setInnerHandlers();
-
-    this.setDeleteCommentHandler();
   }
 
   get template() {

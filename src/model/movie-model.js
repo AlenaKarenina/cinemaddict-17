@@ -22,8 +22,7 @@ export default class MovieModel extends Observable {
   init = async () => {
     try {
       const movies = await this.#filmsApiService.movies;
-      //this.#movies = movies.map(this.#adaptToClient);
-      this.#movies = movies.map(MovieModel.adaptToClient);
+      this.#movies = movies.map(this.#adaptToClient);
     } catch(err) {
       this.#movies = [];
     }
@@ -39,8 +38,7 @@ export default class MovieModel extends Observable {
 
     try {
       const response = await this.#filmsApiService.updateMovies(update);
-      //const updatedFilm = this.#adaptToClient(response);
-      const updatedFilm = MovieModel.adaptToClient(response);
+      const updatedFilm = this.#adaptToClient(response);
       this.#movies = [
         ...this.#movies.slice(0, index),
         updatedFilm,
@@ -52,7 +50,7 @@ export default class MovieModel extends Observable {
     }
   };
 
-  static adaptToClient = (movie) => {
+  #adaptToClient = (movie) => {
     const filmInfo = movie.film_info;
     const userDetails = movie.user_details;
 

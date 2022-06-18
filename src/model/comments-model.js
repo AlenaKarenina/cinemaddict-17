@@ -1,6 +1,5 @@
 import Observable from '../framework/observable.js';
 import {UpdateType} from '../const.js';
-import MovieModel from './movie-model.js';
 
 export default class CommentsModel extends Observable {
 
@@ -29,31 +28,15 @@ export default class CommentsModel extends Observable {
     this._notify(UpdateType.INIT);
   };
 
-  addComment = async (updateType, comment, movie) => {
+  addComment = async (updateType, update, movie) => {
     try {
-      const response = await this.#commentsApiService.addComment(comment, movie.id);
-      this.#comments = [...response.comments];
+      await this.#commentsApiService.addComment(update, movie.id);
 
-      this._notify(updateType, comment);
+      this._notify(updateType, update);
     } catch (err) {
       throw new Error('Can\'t add comment');
     }
   };
-
-  /*addComment = async (updateType, data) => {
-    const {movie, newComment} = data;
-    try {
-      const response = await this.#commentsApiService.addComment(newComment, movie.id);
-      this.#comments = response.comments;
-      const updatedFilm = {
-        ...MovieModel.adaptToClient(response.movie),
-        comments: this.#comments
-      };
-      this._notify(updateType, updatedFilm);
-    } catch (err) {
-      throw new Error('Can\'t add comment');
-    }
-  }*/
 
   deleteComment = async (updateType, id) => {
 

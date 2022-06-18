@@ -134,35 +134,35 @@ export default class FilmsPresenter {
     this.#filmPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = async (actionType, updateType, update, comment) => {
+  #handleViewAction = async (actionType, updateType, update, movie) => {
 
     this.#uiBlocker.block();
 
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
-        this.#filmPresenter.get(update.id).setSaving();
+        //this.#filmPresenter.get(update.id).setSaving();
         try {
           await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
-          this.#filmPresenter.get(update.id).setAborting();
+          //this.#filmPresenter.get(update.id).setAborting();
         }
         break;
       case UserAction.ADD_COMMENT:
-        this.#filmPresenter.setSaving();
+        //this.#filmPresenter.setSaving();
         try {
-          await this.#commentsModel.addComment(updateType, comment, update.id);
+          await this.#commentsModel.addComment(updateType, update, movie);
           await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
-          this.#filmPresenter.setAborting();
+          //this.#filmPresenter.setAborting();
         }
         break;
       case UserAction.DELETE_COMMENT:
-        this.#filmPresenter.get(update.id).setDeleting();
+        //this.#filmPresenter.get(update.id).setDeleting();
         try {
-          await this.#commentsModel.deleteComment(updateType, comment);
+          await this.#commentsModel.deleteComment(updateType, update);
           await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
-          this.#filmPresenter.get(update.id).setAborting();
+          //this.#filmPresenter.get(update.id).setAborting();
         }
         break;
     }

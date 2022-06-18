@@ -124,12 +124,6 @@ export default class FilmPresenter {
     this.#popupComponent.shake(resetFormState);
   };
 
-  /*shakeComment = (callback) => () => {
-    this.#popupComponent.shake
-      .call({
-        element: this.#popupComponent.element.querySelector('.film-details__new-comment')}, callback);
-  };*/
-
   #openPopup = async () => {
     this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
     await this.#commentsModel.init(this.#movie.id);
@@ -185,38 +179,20 @@ export default class FilmPresenter {
     );
   };
 
-  /*#handleAddComment = async (movie, newComment) => {
-    await this.#commentsModel.addComment(UpdateType.PATCH, newComment, movie);
-  };*/
-
-  #handleAddComment = (update) => {
+  #handleAddComment = (movie, newComment) => {
     this.#changeData(
       UserAction.ADD_COMMENT,
       UpdateType.MINOR,
-      update,
-      this.setSaving,
+      newComment, movie
     );
   };
-
-  /*#handleDeleteComment = async (id) => {
-    await this.#commentsModel.deleteComment(UpdateType.PATCH, id);
-  };*/
 
   #handleDeleteComment = (update) => {
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
       update,
-      this.setDeleting,
     );
-  };
-
-  resetFilmState = () => {
-    this.#popupComponent.updateElement({
-      isDisabled: false,
-      isSaving: false,
-      isDeleting: false,
-    });
   };
 
 }
