@@ -41,6 +41,7 @@ export default class FilmsPresenter {
     this.#filterModel = filterModel;
     this.#commentsModel = commentsModel;
 
+    this.#commentsModel.addObserver(this.#handleModelEvent);
     this.#movieModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -135,39 +136,33 @@ export default class FilmsPresenter {
   };
 
   #handleViewAction = async (actionType, updateType, update, movie) => {
-
-    this.#uiBlocker.block();
-
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
-        //this.#filmPresenter.get(update.id).setSaving();
         try {
           await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
-          //this.#filmPresenter.get(update.id).setAborting();
+          this.#filmPresenter.get(update.id).setAbortingChange();
         }
         break;
       case UserAction.ADD_COMMENT:
+        //this.#uiBlocker.block();
         //this.#filmPresenter.setSaving();
         try {
           await this.#commentsModel.addComment(updateType, update, movie);
-          await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
           //this.#filmPresenter.setAborting();
+          //this.#uiBlocker.unblock();
         }
         break;
       case UserAction.DELETE_COMMENT:
         //this.#filmPresenter.get(update.id).setDeleting();
         try {
           await this.#commentsModel.deleteComment(updateType, update);
-          await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
           //this.#filmPresenter.get(update.id).setAborting();
         }
         break;
     }
-
-    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {

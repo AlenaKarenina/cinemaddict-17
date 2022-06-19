@@ -96,15 +96,30 @@ export default class FilmPresenter {
   };
 
   setSaving = () => {
-    this.#popupComponent.updateElement({
-      isSaving: true,
-    });
+    if (this.#mode === Mode.OPENED) {
+      this.#popupComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
   };
 
   setDeleting = () => {
-    this.#popupComponent.updateElement({
-      isDeleting: true,
-    });
+    if (this.#mode === Mode.OPENED) {
+      this.#popupComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
+  setDisabled = () => {
+    if (this.#mode === Mode.OPENED) {
+      this.#popupComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
   };
 
   setAborting = () => {
@@ -122,6 +137,10 @@ export default class FilmPresenter {
     };
 
     this.#popupComponent.shake(resetFormState);
+  };
+
+  setAbortingChange = () => {
+    this.#popupComponent.shakeElement(this.#popupComponent.element.querySelector('.film-details__controls'));
   };
 
   #openPopup = async () => {

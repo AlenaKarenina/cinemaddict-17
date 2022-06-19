@@ -1,8 +1,8 @@
 import {render} from './framework/render.js';
-import ProfileView from './view/profile-view.js';
 import FooterStatisticsView from './view/footer-statistics-view.js';
 import FilmsPresenter from './presenter/films-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
+import ProfilePresenter from './presenter/profile-presenter.js';
 import MovieModel from './model/movie-model.js';
 import FilterModel from './model/filter-model.js';
 import CommentsModel from './model/comments-model.js';
@@ -20,11 +20,11 @@ const commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHOR
 const filterModel = new FilterModel();
 const containerFilmsPresenter = new FilmsPresenter(pageMain, movieModel, filterModel, commentsModel);
 const filterPresenter = new FilterPresenter(pageMain, filterModel, movieModel);
+const profilePresenter = new ProfilePresenter(pageHeader, movieModel);
 
 filterPresenter.init();
 containerFilmsPresenter.init();
-
-render(new ProfileView, pageHeader);
+profilePresenter.init();
 
 movieModel.init()
   .finally(() => {
