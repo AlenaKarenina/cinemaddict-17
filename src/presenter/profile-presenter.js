@@ -18,10 +18,10 @@ export default class ProfilePresenter {
 
   init = () => {
     this.#movie = this.#movieModel.movies;
-    const rang = getRank(this.#movie);
+    const rank = getRank(this.#movie);
 
-    if (rang) {
-      this.#renderProfile(rang);
+    if (rank) {
+      this.#renderProfile(rank);
       return;
     }
 
@@ -29,9 +29,9 @@ export default class ProfilePresenter {
     this.#profileComponent = null;
   };
 
-  #renderProfile = (rang) => {
+  #renderProfile = (rank) => {
     const prevProfileComponent = this.#profileComponent;
-    this.#profileComponent = new ProfileView(rang);
+    this.#profileComponent = new ProfileView(rank);
 
     if (prevProfileComponent === null) {
       render(this.#profileComponent, this.#profileContainer);

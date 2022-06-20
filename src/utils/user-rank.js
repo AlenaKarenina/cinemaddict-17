@@ -10,19 +10,21 @@ export const getRank = (movies) => {
   };
 
   const NONE_COUNT = 0;
-  const NOVICE_COUNT = 1;
-  const FAN_COUNT = 11;
+  const MIN_NOVICE_COUNT = 1;
+  const MAX_NOVICE_COUNT = 10;
+  const MIN_FAN_COUNT = 11;
+  const MAX_FAN_COUNT = 20;
   const MOVIE_BUFF_COUNT = 21;
 
   if (watchedCount === NONE_COUNT) {
     return '';
   }
 
-  if (watchedCount >= NOVICE_COUNT && watchedCount <= 10) {
+  if (watchedCount >= MIN_NOVICE_COUNT && watchedCount <= MAX_NOVICE_COUNT) {
     return Rank.NOVICE;
   }
 
-  if (watchedCount >= FAN_COUNT && watchedCount <= 20) {
+  if (watchedCount >= MIN_FAN_COUNT && watchedCount <= MAX_FAN_COUNT) {
     return Rank.FAN;
   }
 
