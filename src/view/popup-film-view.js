@@ -275,6 +275,16 @@ export default class PopupFilmView extends AbstractStatefulView {
 
     this._callback.deleteComment(commentId);
 
+    this._state.comments = [
+      ...this._state.comments.slice(0, index),
+      ...this._state.comments.slice(index + 1),
+    ];
+
+    this.updateElement({
+      ...this._state
+    });
+
+
     this.element.scrollTop = scrollPosition;
   };
 

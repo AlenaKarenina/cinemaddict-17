@@ -192,7 +192,7 @@ export default class FilmPresenter {
   #handleAddComment = (movie, newComment) => {
     this.#changeData(
       UserAction.ADD_COMMENT,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       newComment, movie
     );
   };
@@ -200,7 +200,7 @@ export default class FilmPresenter {
   #handleDeleteComment = (update) => {
     this.#changeData(
       UserAction.DELETE_COMMENT,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       update
     );
   };
