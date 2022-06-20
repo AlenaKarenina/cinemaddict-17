@@ -284,7 +284,6 @@ export default class PopupFilmView extends AbstractStatefulView {
       ...this._state
     });
 
-
     this.element.scrollTop = scrollPosition;
   };
 

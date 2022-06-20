@@ -9,7 +9,7 @@ import LoadingView from '../view/loading-view.js';
 import FilmPresenter from './film-presenter.js';
 import {sortFilmsByRating, sortFilmsByDate} from '../utils/task.js';
 import {filter} from '../utils/filter.js';
-import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+//import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class FilmsPresenter {
 
@@ -31,17 +31,14 @@ export default class FilmsPresenter {
   #isLoading = true;
 
   #filterModel = null;
-  #commentsModel = null;
 
-  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
+  //#uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
-  constructor(filmListContainer, movieModel, filterModel, commentsModel) {
+  constructor(filmListContainer, movieModel, filterModel) {
     this.#filmListContainer = filmListContainer;
     this.#movieModel = movieModel;
     this.#filterModel = filterModel;
-    this.#commentsModel = commentsModel;
 
-    this.#commentsModel.addObserver(this.#handleModelEvent);
     this.#movieModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -135,8 +132,8 @@ export default class FilmsPresenter {
     this.#filmPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handleViewAction = async (actionType, updateType, update, movie) => {
-    this.#uiBlocker.block();
+  #handleViewAction = async (actionType, updateType, update) => {
+    //this.#uiBlocker.block();
 
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
@@ -147,24 +144,17 @@ export default class FilmsPresenter {
         }
         break;
       case UserAction.ADD_COMMENT:
-        //this.#filmPresenter.setSaving();
-        try {
-          await this.#commentsModel.addComment(updateType, update, movie);
-        } catch(err) {
-          //this.#filmPresenter.setAborting();
-        }
+        await this.#movieModel.updateFilm(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        //this.#filmPresenter.get(update.id).setDeleting();
         try {
-          await this.#commentsModel.deleteComment(updateType, update);
+          await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
-          //this.#filmPresenter.get(update.id).setAborting();
         }
         break;
     }
 
-    this.#uiBlocker.unblock();
+    //this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -193,7 +183,6 @@ export default class FilmsPresenter {
       this.#filmContainer.element,
       this.#handleViewAction,
       this.#handleModeChange,
-      this.#commentsModel
     );
     filmPresenter.init(movie);
     this.#filmPresenter.set(movie.id, filmPresenter);

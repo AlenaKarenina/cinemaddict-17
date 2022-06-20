@@ -1,9 +1,10 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupFilmView from '../view/popup-film-view.js';
-import {UserAction, UpdateType, END_POINT, AUTHORIZATION} from '../const.js';
+import {UserAction, UpdateType, END_POINT, AUTHORIZATION, TimeLimit} from '../const.js';
 import CommentsApiService from '../comments-api-service.js';
 import CommentsModel from '../model/comments-model.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -22,11 +23,28 @@ export default class FilmPresenter {
 
   #commentsModel = null;
 
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
+
   constructor(filmListContainer, changeData, changeMode) {
     this.#filmListContainer = filmListContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
+
+    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
+    this.#commentsModel.addObserver(this.#handleCommentsModelChange);
   }
+
+  #handleCommentsModelChange = (updateType) => {
+    switch (updateType) {
+      case UserAction.ADD_COMMENT:
+        this.#changeData(
+          UserAction.ADD_COMMENT,
+          UpdateType.MINOR,
+          this.#movie
+        );
+        break;
+    }
+  };
 
   get isOpened() {
     return this.#mode === Mode.OPENED;
@@ -135,7 +153,6 @@ export default class FilmPresenter {
   };
 
   #openPopup = async () => {
-    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
     await this.#commentsModel.init(this.#movie.id);
     const comments = this.#commentsModel.comments;
     this.#popupComponent = new PopupFilmView({...this.#movie, comments});
@@ -190,11 +207,14 @@ export default class FilmPresenter {
   };
 
   #handleAddComment = (movie, newComment) => {
-    this.#changeData(
-      UserAction.ADD_COMMENT,
-      UpdateType.PATCH,
-      newComment, movie
-    );
+    this.setSaving();
+    this.#uiBlocker.block();
+    try {
+      this.#commentsModel.addComment(newComment, movie.id);
+    } catch(err) {
+      this.setAborting();
+    }
+    this.#uiBlocker.unblock();
   };
 
   #handleDeleteComment = (update) => {
