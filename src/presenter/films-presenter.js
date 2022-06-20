@@ -136,6 +136,8 @@ export default class FilmsPresenter {
   };
 
   #handleViewAction = async (actionType, updateType, update, movie) => {
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
         try {
@@ -145,13 +147,11 @@ export default class FilmsPresenter {
         }
         break;
       case UserAction.ADD_COMMENT:
-        //this.#uiBlocker.block();
         //this.#filmPresenter.setSaving();
         try {
           await this.#commentsModel.addComment(updateType, update, movie);
         } catch(err) {
           //this.#filmPresenter.setAborting();
-          //this.#uiBlocker.unblock();
         }
         break;
       case UserAction.DELETE_COMMENT:
@@ -163,6 +163,8 @@ export default class FilmsPresenter {
         }
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
