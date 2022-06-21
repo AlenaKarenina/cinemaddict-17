@@ -212,11 +212,11 @@ export default class FilmPresenter {
     );
   };
 
-  #handleAddComment = (movie, newComment) => {
+  #handleAddComment = async (movie, newComment) => {
     this.#uiBlocker.block();
     this.setSaving();
     try {
-      this.#commentsModel.addComment(newComment, movie.id);
+      await this.#commentsModel.addComment(newComment, movie.id);
     } catch(err) {
       this.setAborting();
       this.setAbortingAddComment();
@@ -224,11 +224,11 @@ export default class FilmPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #handleDeleteComment = (update) => {
+  #handleDeleteComment = async (update) => {
     this.#uiBlocker.block();
     this.setDeleting(update);
     try {
-      this.#commentsModel.deleteComment(update);
+      await this.#commentsModel.deleteComment(update);
     } catch(err) {
       this.setAborting();
     }
