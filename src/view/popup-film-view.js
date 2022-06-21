@@ -245,10 +245,12 @@ export default class PopupFilmView extends AbstractStatefulView {
   };
 
   #onAddComment = (evt) => {
+    const scrollPosition = this.element.scrollTop;
     if (evt.ctrlKey && evt.key === 'Enter') {
       evt.preventDefault();
       this._callback.addComment(PopupFilmView.parseStateToComment(this._state), PopupFilmView.newComment(this._state));
     }
+    this.element.scrollTop = scrollPosition;
   };
 
   setDeleteCommentHandler = (callback) => {

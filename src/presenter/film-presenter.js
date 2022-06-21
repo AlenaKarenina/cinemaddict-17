@@ -43,6 +43,13 @@ export default class FilmPresenter {
           this.#movie
         );
         break;
+      case UserAction.DELETE_COMMENT:
+        this.#changeData(
+          UserAction.DELETE_COMMENT,
+          UpdateType.MINOR,
+          //this.#movie
+        );
+        break;
     }
   };
 
@@ -116,17 +123,13 @@ export default class FilmPresenter {
   setSaving = () => {
     this.#popupComponent.updateElement({
       isSaving: true,
+      isDisabled: true,
     });
   };
 
   setDeleting = () => {
     this.#popupComponent.updateElement({
       isDeleting: true,
-    });
-  };
-
-  setDisabled = () => {
-    this.#popupComponent.updateElement({
       isDisabled: true,
     });
   };
@@ -150,6 +153,10 @@ export default class FilmPresenter {
 
   setAbortingChange = () => {
     this.#popupComponent.shake(this.#popupComponent.element.querySelector('.film-details__controls'));
+  };
+
+  setAbortingForm = () => {
+    this.#popupComponent.shake(this.#popupComponent.element.querySelector('.film-details__comment-input'));
   };
 
   #openPopup = async () => {
@@ -213,16 +220,20 @@ export default class FilmPresenter {
       this.#commentsModel.addComment(newComment, movie.id);
     } catch(err) {
       this.setAborting();
+      this.setAbortingForm();
     }
     this.#uiBlocker.unblock();
   };
 
   #handleDeleteComment = (update) => {
-    this.#changeData(
-      UserAction.DELETE_COMMENT,
-      UpdateType.PATCH,
-      update
-    );
+    this.setDeleting();
+    this.#uiBlocker.block();
+    try {
+      this.#commentsModel.deleteComment(update);
+    } catch(err) {
+      this.setAborting();
+    }
+    this.#uiBlocker.unblock();
   };
 
 }
