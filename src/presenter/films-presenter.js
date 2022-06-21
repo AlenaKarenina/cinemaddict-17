@@ -133,15 +133,16 @@ export default class FilmsPresenter {
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
-    this.#uiBlocker.block();
 
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
+        this.#uiBlocker.block();
         try {
           await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
           this.#filmPresenter.get(update.id).setAborting();
         }
+        this.#uiBlocker.unblock();
         break;
       case UserAction.ADD_COMMENT:
         await this.#movieModel.updateFilm(updateType, update);
@@ -151,7 +152,6 @@ export default class FilmsPresenter {
         break;
     }
 
-    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {

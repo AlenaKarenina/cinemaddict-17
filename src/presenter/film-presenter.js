@@ -143,9 +143,9 @@ export default class FilmPresenter {
 
     const resetFormState = () => {
       this.#popupComponent.updateElement({
-        isDisabled: true,
+        isDisabled: false,
         isDeleting: false,
-        isSaving: true,
+        isSaving: false,
       });
     };
 
@@ -155,14 +155,6 @@ export default class FilmPresenter {
   setAbortingAddComment = () => {
     this.#popupComponent.updateElement({
       abortingFormSubmit: true
-    });
-  };
-
-  resetFilmState = () => {
-    this.#popupComponent.updateElement({
-      isDisabled: false,
-      isSaving: false,
-      isDeleting: false,
     });
   };
 
