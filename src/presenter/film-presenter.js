@@ -151,10 +151,6 @@ export default class FilmPresenter {
     this.#popupComponent.shake(resetFormState);
   };
 
-  setAbortingChange = () => {
-    this.#popupComponent.shake(this.#popupComponent.element.querySelector('.film-details__controls'));
-  };
-
   setAbortingForm = () => {
     this.#popupComponent.shake(this.#popupComponent.element.querySelector('.film-details__comment-input'));
   };
