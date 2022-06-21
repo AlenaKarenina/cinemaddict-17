@@ -51,13 +51,14 @@ const createFilmDetailsPopupTemplate = (movie) => {
 
   const createEmotion = (emoji) => `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
 
-  const createAddCommentTemplate = (emoji, comment, isSaving) => {
+  const createAddCommentTemplate = (emoji, comment, abortingFormSubmit, isSaving) => {
     const emojiImg = emoji ? createEmotion(emoji) : '';
     const newComment = comment ? comment : '';
 
     return `<div class="film-details__add-emoji-label">${emojiImg}</div>
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isSaving ? 'disabled' : ''}>
+        <textarea class="film-details__comment-input ${abortingFormSubmit ? 'shake' : ''}" ${isSaving ? 'disabled' : ''}
+        placeholder="Select reaction below and write comment here" name="comment">
           ${newComment}
         </textarea>
       </label>`;
@@ -142,7 +143,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
             ${listComments}
           </ul>
           <div class="film-details__new-comment">
-            ${createAddCommentTemplate(commentEmoji, commentInput)}
+            ${createAddCommentTemplate(commentEmoji, commentInput, movie.abortingFormSubmit)}
             <div class="film-details__emoji-list">
               ${createEmojiListTemplate(commentEmoji)}
             </div>
