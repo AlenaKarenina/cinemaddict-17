@@ -1,9 +1,10 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import PopupFilmView from '../view/popup-film-view.js';
-import {UserAction, UpdateType, END_POINT, AUTHORIZATION} from '../const.js';
+import {UserAction, UpdateType, END_POINT, AUTHORIZATION, TimeLimit} from '../const.js';
 import CommentsApiService from '../comments-api-service.js';
 import CommentsModel from '../model/comments-model.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -22,11 +23,35 @@ export default class FilmPresenter {
 
   #commentsModel = null;
 
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
+
   constructor(filmListContainer, changeData, changeMode) {
     this.#filmListContainer = filmListContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
+
+    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
+    this.#commentsModel.addObserver(this.#handleCommentsModelChange);
   }
+
+  #handleCommentsModelChange = (updateType) => {
+    switch (updateType) {
+      case UserAction.ADD_COMMENT:
+        this.#changeData(
+          UserAction.ADD_COMMENT,
+          UpdateType.MINOR,
+          this.#movie
+        );
+        break;
+      case UserAction.DELETE_COMMENT:
+        this.#changeData(
+          UserAction.DELETE_COMMENT,
+          UpdateType.MINOR,
+          this.#movie
+        );
+        break;
+    }
+  };
 
   get isOpened() {
     return this.#mode === Mode.OPENED;
@@ -47,13 +72,11 @@ export default class FilmPresenter {
     const prevPopupComponent = this.#popupComponent;
 
     this.#filmComponent = new FilmCardView(movie);
-    this.#popupComponent = new PopupFilmView(movie);
+    this.#popupComponent = new PopupFilmView({...movie, comments: this.#commentsModel?.comments || []});
 
     this.#filmComponent.setWatchlistClickHandler(this.#onWatchListClick);
     this.#filmComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
     this.#filmComponent.setFavoriteClickHandler(this.#onFavoriteClick);
-
-    this.#popupComponent.setAddCommentHandler(this.#onAddComment);
 
     this.#filmComponent.setClickHandler(this.#openPopup);
 
@@ -80,6 +103,9 @@ export default class FilmPresenter {
     this.#popupComponent.setWatchlistClickHandler(this.#onWatchListClick);
     this.#popupComponent.setAlreadyWatchedClickHandler(this.#onAlreadyWatchedClick);
     this.#popupComponent.setFavoriteClickHandler(this.#onFavoriteClick);
+
+    this.#popupComponent.setAddCommentHandler(this.#handleAddComment);
+    this.#popupComponent.setDeleteCommentHandler(this.#handleDeleteComment);
   };
 
   destroy = () => {
@@ -94,8 +120,45 @@ export default class FilmPresenter {
     }
   };
 
+  setSaving = () => {
+    this.#popupComponent.updateElement({
+      isSaving: true,
+      isDisabled: true,
+    });
+  };
+
+  setDeleting = (commentId) => {
+    this.#popupComponent.updateElement({
+      deletingCommentId: commentId,
+      isDeleting: true,
+      isDisabled: true,
+    });
+  };
+
+  setAborting = () => {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#popupComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#popupComponent.updateElement({
+        isDisabled: false,
+        isDeleting: false,
+        isSaving: false,
+      });
+    };
+
+    this.#popupComponent.shake(resetFormState);
+  };
+
+  setAbortingAddComment = () => {
+    this.#popupComponent.updateElement({
+      abortingFormSubmit: true
+    });
+  };
+
   #openPopup = async () => {
-    this.#commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
     await this.#commentsModel.init(this.#movie.id);
     const comments = this.#commentsModel.comments;
     this.#popupComponent = new PopupFilmView({...this.#movie, comments});
@@ -149,11 +212,27 @@ export default class FilmPresenter {
     );
   };
 
-  #onAddComment = (update) => {
-    this.#changeData(
-      UserAction.ADD_COMMENT,
-      UpdateType.PATCH,
-      update
-    );
+  #handleAddComment = (movie, newComment) => {
+    this.#uiBlocker.block();
+    this.setSaving();
+    try {
+      this.#commentsModel.addComment(newComment, movie.id);
+    } catch(err) {
+      this.setAborting();
+      this.setAbortingAddComment();
+    }
+    this.#uiBlocker.unblock();
   };
+
+  #handleDeleteComment = (update) => {
+    this.#uiBlocker.block();
+    this.setDeleting(update);
+    try {
+      this.#commentsModel.deleteComment(update);
+    } catch(err) {
+      this.setAborting();
+    }
+    this.#uiBlocker.unblock();
+  };
+
 }

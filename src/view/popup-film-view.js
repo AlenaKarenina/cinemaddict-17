@@ -3,7 +3,7 @@ import {humanizeFormatDate, humanizeDurationFormat} from '../utils/task.js';
 import {createComment} from './comment-popup-view.js';
 import {EMOJIS} from '../const.js';
 
-const createFilmDetailsPopupTemplate = (movie) => {
+const createFilmDetailsPopupTemplate = (movie, isDisabled) => {
 
   const {
     filmInfo: {
@@ -51,13 +51,16 @@ const createFilmDetailsPopupTemplate = (movie) => {
 
   const createEmotion = (emoji) => `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
 
-  const createAddCommentTemplate = (emoji, comment) => {
+  const createAddCommentTemplate = (emoji, comment, abortingFormSubmit, isSaving) => {
     const emojiImg = emoji ? createEmotion(emoji) : '';
     const newComment = comment ? comment : '';
 
     return `<div class="film-details__add-emoji-label">${emojiImg}</div>
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newComment}</textarea>
+        <textarea class="film-details__comment-input ${abortingFormSubmit ? 'shake' : ''}" ${isSaving ? 'disabled' : ''}
+        placeholder="Select reaction below and write comment here" name="comment">
+          ${newComment}
+        </textarea>
       </label>`;
   };
 
@@ -69,7 +72,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
       </label>`).join('')
   );
 
-  const listComments = comments.map((comment) => createComment(comment)).join('');
+  const listComments = comments.map((comment) => createComment(comment, movie.deletingCommentId)).join('');
 
   return (`
   <section class="film-details">
@@ -128,9 +131,9 @@ const createFilmDetailsPopupTemplate = (movie) => {
           </div>
         </div>
         <section class="film-details__controls">
-          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${getControlClassName(userDetails.watchlist)}" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--watched ${getControlClassName(userDetails.alreadyWatched)}" id="watched" name="watched">Already watched</button>
-          <button type="button" class="film-details__control-button film-details__control-button--favorite ${getControlClassName(userDetails.favorite)}" id="favorite" name="favorite">Add to favorites</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${getControlClassName(userDetails.watchlist)}" id="watchlist" name="watchlist" ${isDisabled ? 'disabled' : ''}>Add to watchlist</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watched ${getControlClassName(userDetails.alreadyWatched)}" id="watched" name="watched" ${isDisabled ? 'disabled' : ''}>Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--favorite ${getControlClassName(userDetails.favorite)}" id="favorite" name="favorite" ${isDisabled ? 'disabled' : ''}>Add to favorites</button>
         </section>
       </div>
       <div class="film-details__bottom-container">
@@ -140,7 +143,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
             ${listComments}
           </ul>
           <div class="film-details__new-comment">
-            ${createAddCommentTemplate(commentEmoji, commentInput)}
+            ${createAddCommentTemplate(commentEmoji, commentInput, movie.abortingFormSubmit)}
             <div class="film-details__emoji-list">
               ${createEmojiListTemplate(commentEmoji)}
             </div>
@@ -158,8 +161,6 @@ export default class PopupFilmView extends AbstractStatefulView {
     this._state = PopupFilmView.parseCommentToState(movie);
 
     this.#setInnerHandlers();
-
-    this.setDeleteCommentHandler();
   }
 
   get template() {
@@ -245,10 +246,12 @@ export default class PopupFilmView extends AbstractStatefulView {
   };
 
   #onAddComment = (evt) => {
+    const scrollPosition = this.element.scrollTop;
     if (evt.ctrlKey && evt.key === 'Enter') {
       evt.preventDefault();
-      this._callback.addComment(PopupFilmView.parseStateToComment(this._state));
+      this._callback.addComment(PopupFilmView.parseStateToComment(this._state), PopupFilmView.newComment(this._state));
     }
+    this.element.scrollTop = scrollPosition;
   };
 
   setDeleteCommentHandler = (callback) => {
@@ -263,13 +266,17 @@ export default class PopupFilmView extends AbstractStatefulView {
   #onCommentDelete = (evt) => {
     evt.preventDefault();
     const scrollPosition = this.element.scrollTop;
-    const isDeleteButton = Number(evt.target.dataset.buttonId);
+    const isDeleteButton = evt.target.dataset.buttonId;
+
+    let commentId = null;
+
     const index = this._state.comments.findIndex((item) => item.id === isDeleteButton);
 
-    this._state.comments = [
-      ...this._state.comments.slice(0, index),
-      ...this._state.comments.slice(index + 1),
-    ];
+    if (index !== -1) {
+      commentId = this._state.comments[index].id;
+    }
+
+    this._callback.deleteComment(commentId);
 
     this.updateElement({
       ...this._state
@@ -290,23 +297,30 @@ export default class PopupFilmView extends AbstractStatefulView {
     this.setAddCommentHandler(this._callback.addComment);
   };
 
-  static parseCommentToState = (movie) => ({...movie, commentEmoji: null, commentInput: null});
+  static parseCommentToState = (movie) => (
+    {...movie,
+      commentEmoji: null,
+      commentInput: null,
+      isDisabled: false,
+      isDeleting: false,
+      isSaving: false,
+    }
+  );
 
   static parseStateToComment = (state) => {
     const movie = { ...state };
 
-    if (movie.commentEmoji && movie.commentInput) {
-      const newComment = {
-        emotion: `${movie.commentEmoji}`,
-        comment: movie.commentInput
-      };
-
-      movie.comments = [...movie.comments, newComment];
-    }
-
     delete movie.commentEmoji;
     delete movie.commentInput;
+    delete movie.isDeleting;
+    delete movie.isDisabled;
+    delete movie.isSaving;
 
     return movie;
   };
+
+  static newComment = (state) => ({
+    emotion: state.commentEmoji,
+    comment: state.commentInput,
+  });
 }

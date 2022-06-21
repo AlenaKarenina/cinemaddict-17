@@ -1,7 +1,3 @@
-const COMMENT_COUNT = 50;
-
-const CARD_COUNT = 20;
-
 const FilterType = {
   ALL: 'all',
   WATCHLIST: 'watchlist',
@@ -43,6 +39,13 @@ const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
-export {CARD_COUNT, COMMENT_COUNT, FilterType, SHOW_FILM_COUNT_STEP, SortType, UserAction, UpdateType, AUTHORIZATION, END_POINT, EMOJIS, Method};
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+export {FilterType, SHOW_FILM_COUNT_STEP, SortType, UserAction, UpdateType, AUTHORIZATION, END_POINT, EMOJIS, Method, TimeLimit};
