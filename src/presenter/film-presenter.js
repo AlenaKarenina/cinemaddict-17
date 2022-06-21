@@ -127,8 +127,9 @@ export default class FilmPresenter {
     });
   };
 
-  setDeleting = () => {
+  setDeleting = (commentId) => {
     this.#popupComponent.updateElement({
+      deletingCommentId: commentId,
       isDeleting: true,
       isDisabled: true,
     });
@@ -165,33 +166,6 @@ export default class FilmPresenter {
 
   setAbortingFilmCardControls = (callback) => {
     this.#filmComponent.shake(callback, '.film-card__controls');
-  };
-
-  /*
-
-  setAbortingPopupControls = () => {
-    this.#popupComponent.shake(this.#popupComponent.element.querySelector('.film-details__controls'));
-  };
-
-  shakePopupControls = (callback) => () => {
-    this.#popupComponent.shake
-      .call({
-        element: this.#popupComponent.element.querySelector('.film-details__controls')
-      }, callback);
-  };*/
-
-  shakeAddComment = (callback) => () => {
-    this.#popupComponent.shake
-      .call({
-        element: this.#popupComponent.element.querySelector('.film-details__new-comment')
-      }, callback);
-  };
-
-  shakeDeletingComment = (callback, commentId) => () => {
-    this.#popupComponent.shake
-      .call({
-        element: this.#popupComponent.element.querySelector(`button[data-button-id='${commentId}']`).closest('.film-details__comment')
-      }, callback);
   };
 
   #openPopup = async () => {
@@ -254,20 +228,17 @@ export default class FilmPresenter {
   #handleAddComment = (movie, newComment) => {
     this.#uiBlocker.block();
     this.setSaving();
-    this.shakeAddComment(this.resetFilmState);
     try {
       this.#commentsModel.addComment(newComment, movie.id);
     } catch(err) {
       this.setAborting();
-      this.setAbortingForm();
     }
     this.#uiBlocker.unblock();
   };
 
   #handleDeleteComment = (update) => {
     this.#uiBlocker.block();
-    this.setDeleting();
-    this.shakeDeletingComment(this.resetFilmState, update.commentId);
+    this.setDeleting(update);
     try {
       this.#commentsModel.deleteComment(update);
     } catch(err) {

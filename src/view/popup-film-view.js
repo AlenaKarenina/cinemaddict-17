@@ -71,7 +71,7 @@ const createFilmDetailsPopupTemplate = (movie) => {
       </label>`).join('')
   );
 
-  const listComments = comments.map((comment) => createComment(comment)).join('');
+  const listComments = comments.map((comment) => createComment(comment, movie.deletingCommentId)).join('');
 
   return (`
   <section class="film-details">
@@ -276,11 +276,6 @@ export default class PopupFilmView extends AbstractStatefulView {
     }
 
     this._callback.deleteComment(commentId);
-
-    this._state.comments = [
-      ...this._state.comments.slice(0, index),
-      ...this._state.comments.slice(index + 1),
-    ];
 
     this.updateElement({
       ...this._state
