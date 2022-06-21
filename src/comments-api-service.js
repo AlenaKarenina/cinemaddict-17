@@ -17,7 +17,7 @@ export default class CommentsApiService extends ApiService {
 
     const parsedResponse = await ApiService.parseResponse(response);
 
-    return parsedResponse;
+    return await parsedResponse;
   };
 
   deleteComment = async (id) => {
@@ -26,6 +26,6 @@ export default class CommentsApiService extends ApiService {
       method: Method.DELETE,
     });
 
-    return response;
+    return await response;
   };
 }
