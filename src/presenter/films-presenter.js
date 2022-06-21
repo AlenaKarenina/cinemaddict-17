@@ -1,5 +1,5 @@
 import {render, RenderPosition, remove} from '../framework/render.js';
-import {SHOW_FILM_COUNT_STEP, SortType, UpdateType, UserAction, FilterType} from '../const.js';
+import {SHOW_FILM_COUNT_STEP, SortType, UpdateType, UserAction, FilterType, TimeLimit} from '../const.js';
 import FilmSectionView from '../view/film-section-view.js';
 import FilmContainerView from '../view/film-container-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
@@ -9,6 +9,7 @@ import LoadingView from '../view/loading-view.js';
 import FilmPresenter from './film-presenter.js';
 import {sortFilmsByRating, sortFilmsByDate} from '../utils/task.js';
 import {filter} from '../utils/filter.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class FilmsPresenter {
 
@@ -30,6 +31,8 @@ export default class FilmsPresenter {
   #isLoading = true;
 
   #filterModel = null;
+
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
   constructor(filmListContainer, movieModel, filterModel) {
     this.#filmListContainer = filmListContainer;
@@ -130,12 +133,14 @@ export default class FilmsPresenter {
   };
 
   #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
         try {
           await this.#movieModel.updateFilm(updateType, update);
         } catch(err) {
-          this.#filmPresenter.get(update.id).setAbortingChange();
+          this.#filmPresenter.get(update.id).setAborting();
         }
         break;
       case UserAction.ADD_COMMENT:
@@ -145,6 +150,8 @@ export default class FilmsPresenter {
         await this.#movieModel.updateFilm(updateType, update);
         break;
     }
+
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {

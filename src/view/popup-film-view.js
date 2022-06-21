@@ -3,7 +3,7 @@ import {humanizeFormatDate, humanizeDurationFormat} from '../utils/task.js';
 import {createComment} from './comment-popup-view.js';
 import {EMOJIS} from '../const.js';
 
-const createFilmDetailsPopupTemplate = (movie) => {
+const createFilmDetailsPopupTemplate = (movie, isDisabled) => {
 
   const {
     filmInfo: {
@@ -131,9 +131,9 @@ const createFilmDetailsPopupTemplate = (movie) => {
           </div>
         </div>
         <section class="film-details__controls">
-          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${getControlClassName(userDetails.watchlist)}" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--watched ${getControlClassName(userDetails.alreadyWatched)}" id="watched" name="watched">Already watched</button>
-          <button type="button" class="film-details__control-button film-details__control-button--favorite ${getControlClassName(userDetails.favorite)}" id="favorite" name="favorite">Add to favorites</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${getControlClassName(userDetails.watchlist)}" id="watchlist" name="watchlist" ${isDisabled ? 'disabled' : ''}>Add to watchlist</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watched ${getControlClassName(userDetails.alreadyWatched)}" id="watched" name="watched" ${isDisabled ? 'disabled' : ''}>Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--favorite ${getControlClassName(userDetails.favorite)}" id="favorite" name="favorite" ${isDisabled ? 'disabled' : ''}>Add to favorites</button>
         </section>
       </div>
       <div class="film-details__bottom-container">

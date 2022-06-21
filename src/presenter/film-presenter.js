@@ -143,7 +143,7 @@ export default class FilmPresenter {
 
     const resetFormState = () => {
       this.#popupComponent.updateElement({
-        isDisabled: false,
+        isDisabled: true,
         isDeleting: false,
         isSaving: true,
       });
