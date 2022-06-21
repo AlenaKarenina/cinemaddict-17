@@ -47,7 +47,7 @@ export default class FilmPresenter {
         this.#changeData(
           UserAction.DELETE_COMMENT,
           UpdateType.MINOR,
-          //this.#movie
+          this.#movie
         );
         break;
     }
@@ -151,8 +151,47 @@ export default class FilmPresenter {
     this.#popupComponent.shake(resetFormState);
   };
 
+  resetFilmState = () => {
+    this.#popupComponent.updateElement({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
+  };
+
   setAbortingForm = () => {
     this.#popupComponent.shake(this.#popupComponent.element.querySelector('.film-details__comment-input'));
+  };
+
+  setAbortingFilmCardControls = (callback) => {
+    this.#filmComponent.shake(callback, '.film-card__controls');
+  };
+
+  /*
+
+  setAbortingPopupControls = () => {
+    this.#popupComponent.shake(this.#popupComponent.element.querySelector('.film-details__controls'));
+  };
+
+  shakePopupControls = (callback) => () => {
+    this.#popupComponent.shake
+      .call({
+        element: this.#popupComponent.element.querySelector('.film-details__controls')
+      }, callback);
+  };*/
+
+  shakeAddComment = (callback) => () => {
+    this.#popupComponent.shake
+      .call({
+        element: this.#popupComponent.element.querySelector('.film-details__new-comment')
+      }, callback);
+  };
+
+  shakeDeletingComment = (callback, commentId) => () => {
+    this.#popupComponent.shake
+      .call({
+        element: this.#popupComponent.element.querySelector(`button[data-button-id='${commentId}']`).closest('.film-details__comment')
+      }, callback);
   };
 
   #openPopup = async () => {
@@ -191,6 +230,7 @@ export default class FilmPresenter {
       UpdateType.MINOR,
       {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}},
     );
+    this.setAbortingFilmCardControls();
   };
 
   #onAlreadyWatchedClick = () => {
@@ -199,6 +239,7 @@ export default class FilmPresenter {
       UpdateType.MINOR,
       {...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}},
     );
+    this.setAbortingFilmCardControls();
   };
 
   #onFavoriteClick = () => {
@@ -207,11 +248,13 @@ export default class FilmPresenter {
       UpdateType.MINOR,
       {...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}},
     );
+    this.setAbortingFilmCardControls();
   };
 
   #handleAddComment = (movie, newComment) => {
-    this.setSaving();
     this.#uiBlocker.block();
+    this.setSaving();
+    this.shakeAddComment(this.resetFilmState);
     try {
       this.#commentsModel.addComment(newComment, movie.id);
     } catch(err) {
@@ -222,8 +265,9 @@ export default class FilmPresenter {
   };
 
   #handleDeleteComment = (update) => {
-    this.setDeleting();
     this.#uiBlocker.block();
+    this.setDeleting();
+    this.shakeDeletingComment(this.resetFilmState, update.commentId);
     try {
       this.#commentsModel.deleteComment(update);
     } catch(err) {

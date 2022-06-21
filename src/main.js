@@ -21,9 +21,9 @@ const profilePresenter = new ProfilePresenter(pageHeader, movieModel);
 
 filterPresenter.init();
 containerFilmsPresenter.init();
-profilePresenter.init();
 
 movieModel.init()
   .finally(() => {
     render(new FooterStatisticsView(movieModel.count), pageFooter);
+    profilePresenter.init();
   });

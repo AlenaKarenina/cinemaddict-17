@@ -38,14 +38,14 @@ export default class CommentsModel extends Observable {
     }
   };
 
-  deleteComment = async (commentId) => {
+  deleteComment = async (id) => {
 
-    if (commentId === null) {
+    if (id === null) {
       throw new Error('Can\'t delete unexisting comment');
     }
 
     try {
-      await this.#commentsApiService.deleteComment(commentId);
+      await this.#commentsApiService.deleteComment(id);
 
       this._notify(UserAction.DELETE_COMMENT);
     } catch(err) {
