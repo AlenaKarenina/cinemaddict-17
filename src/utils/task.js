@@ -1,11 +1,13 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 const humanizeDueDate = (dueDate) => dayjs(dueDate).format('YYYY');
 
-const humanizeCommentDateTime = (date) => dayjs(date).format('YYYY/MM/DD HH:mm');
+const humanizeCommentDateTime = (date) => dayjs(date).fromNow();
 
 const humanizeFormatDate = (date, format) => dayjs(date).format(format);
 
