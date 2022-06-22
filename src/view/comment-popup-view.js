@@ -24,15 +24,8 @@ const createComment = (comments, deletingCommentId) => {
 };
 
 export default class CommentPopupView extends AbstractView {
-  #comment = null;
-
-  constructor(comment) {
-    super();
-    this.#comment = comment;
-  }
-
   get template() {
-    return createComment(this.#comment);
+    return createComment();
   }
 }
 
