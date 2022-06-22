@@ -58,9 +58,7 @@ const createFilmDetailsPopupTemplate = (movie, isDisabled) => {
     return `<div class="film-details__add-emoji-label">${emojiImg}</div>
       <label class="film-details__comment-label">
         <textarea class="film-details__comment-input ${abortingFormSubmit ? 'shake' : ''}" ${isSaving ? 'disabled' : ''}
-        placeholder="Select reaction below and write comment here" name="comment">
-          ${newComment}
-        </textarea>
+        placeholder="Select reaction below and write comment here" name="comment">${newComment}</textarea>
       </label>`;
   };
 
@@ -249,7 +247,10 @@ export default class PopupFilmView extends AbstractStatefulView {
     const scrollPosition = this.element.scrollTop;
     if (evt.ctrlKey && evt.key === 'Enter') {
       evt.preventDefault();
-      this._callback.addComment(PopupFilmView.parseStateToComment(this._state), PopupFilmView.newComment(this._state));
+
+      if(this._state.commentEmoji && this._state.commentInput) {
+        this._callback.addComment(PopupFilmView.parseStateToComment(this._state), PopupFilmView.newComment(this._state));
+      }
     }
     this.element.scrollTop = scrollPosition;
   };
