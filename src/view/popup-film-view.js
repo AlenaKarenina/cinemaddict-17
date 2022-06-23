@@ -1,7 +1,30 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizeFormatDate, humanizeDurationFormat} from '../utils/task.js';
-import {createComment} from './comment-popup-view.js';
+import {humanizeFormatDate, humanizeDurationFormat, humanizeCommentDateTime} from '../utils/task.js';
 import {EMOJIS} from '../const.js';
+import he from 'he';
+
+const createEmotion = (emoji) => emoji && `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+
+const createComment = (comments, deletingCommentId) => {
+  const {comment, date, emotion, author, id, isDisabled} = comments;
+
+  return (`
+  <li class="film-details__comment">
+    <span class="film-details__comment-emoji">
+      ${createEmotion(emotion)}
+    </span>
+    <div>
+      <p class="film-details__comment-text">${he.encode(String(comment))}</p>
+      <p class="film-details__comment-info">
+        <span class="film-details__comment-author">${author}</span>
+        <span class="film-details__comment-day">${humanizeCommentDateTime(date)}</span>
+        <button class="film-details__comment-delete" data-button-id="${id}" ${isDisabled ? 'disabled' : ''}>
+          ${deletingCommentId === id ? 'Deleting...' : 'Delete'}
+        </button>
+      </p>
+    </div>
+  </li>`);
+};
 
 const createFilmDetailsPopupTemplate = (movie, isDisabled) => {
 
@@ -48,8 +71,6 @@ const createFilmDetailsPopupTemplate = (movie, isDisabled) => {
   const getControlClassName = (option) => option
     ? 'film-details__control-button--active'
     : '';
-
-  const createEmotion = (emoji) => `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
 
   const createAddCommentTemplate = (emoji, comment, abortingFormSubmit, isSaving) => {
     const emojiImg = emoji ? createEmotion(emoji) : '';
@@ -243,6 +264,10 @@ export default class PopupFilmView extends AbstractStatefulView {
     document.addEventListener('keydown', this.#onAddComment);
   };
 
+  resetAddCommentHandler = () => {
+    document.removeEventListener('keydown', this.#onAddComment);
+  };
+
   #onAddComment = (evt) => {
     const scrollPosition = this.element.scrollTop;
     if (evt.ctrlKey && evt.key === 'Enter') {
@@ -251,6 +276,7 @@ export default class PopupFilmView extends AbstractStatefulView {
       if(this._state.commentEmoji && this._state.commentInput) {
         this._callback.addComment(PopupFilmView.parseStateToComment(this._state), PopupFilmView.newComment(this._state));
       }
+      this.resetAddCommentHandler();
     }
     this.element.scrollTop = scrollPosition;
   };

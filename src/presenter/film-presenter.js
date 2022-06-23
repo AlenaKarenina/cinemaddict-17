@@ -159,6 +159,9 @@ export default class FilmPresenter {
   };
 
   #openPopup = async () => {
+    if (this.isOpened) {
+      return;
+    }
     await this.#commentsModel.init(this.#movie.id);
     const comments = this.#commentsModel.comments;
     this.#popupComponent = new PopupFilmView({...this.#movie, comments});
@@ -178,6 +181,8 @@ export default class FilmPresenter {
 
     this.#mode = Mode.DEFAULT;
     this.#popupComponent.reset(this.#movie);
+
+    this.#popupComponent.resetAddCommentHandler();
   };
 
   #onEscKeyDown = (evt) => {
